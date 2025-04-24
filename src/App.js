@@ -49,10 +49,15 @@ const theme = createTheme({
     values: {
       xs: 0,
       sm: 600,
-      md: 960,
+      md: 900,
       lg: 1200,
-      xl: 1880,
+      xl: 1536,
     },
+  },
+  customBreakpoints: {
+    mobileShort: "@media (max-width: 430px) and (max-height: 700px)",
+    mobileTall: "@media (max-width: 430px) and (min-height: 701px)",
+    tabletAndUp: "@media (min-width: 431px)",
   },
 });
 

@@ -52,7 +52,11 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
             {isAuthenticated ? firstChar : <AccountCircle />}
           </Avatar>
           <Box>
-            <Typography variant="h6" fontWeight="bold">
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              sx={{ fontFamily: "'Red Hat Display', sans-serif" }}
+            >
               {isAuthenticated ? `Hola, ${user?.username}` : "Bienvenido"}
             </Typography>
           </Box>
@@ -66,21 +70,36 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
               <ListItemIcon>
                 <DashboardCustomizeIcon sx={{ color: "#903AF2" }} />
               </ListItemIcon>
-              <ListItemText primary="Dashboard" />
+              <ListItemText
+                primary="Dashboard"
+                primaryTypographyProps={{
+                  sx: { fontFamily: "'Merriweather Sans', sans-serif" },
+                }}
+              />
             </ListItem>
 
             <ListItem button onClick={() => navigate("/pay")}>
               <ListItemIcon>
                 <ShoppingCart sx={{ color: "#903AF2" }} />
               </ListItemIcon>
-              <ListItemText primary="Mis Compras" />
+              <ListItemText
+                primary="Mis Compras"
+                primaryTypographyProps={{
+                  sx: { fontFamily: "'Merriweather Sans', sans-serif" },
+                }}
+              />
             </ListItem>
 
             <ListItem button onClick={handleLogout}>
               <ListItemIcon>
                 <Logout sx={{ color: "#903AF2" }} />
               </ListItemIcon>
-              <ListItemText primary="Cerrar Sesión" />
+              <ListItemText
+                primary="Cerrar Sesión"
+                primaryTypographyProps={{
+                  sx: { fontFamily: "'Merriweather Sans', sans-serif" },
+                }}
+              />
             </ListItem>
           </List>
         ) : (
@@ -89,112 +108,182 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
               <ListItemText
                 primary="Iniciar Sesión"
                 sx={{ color: "#903AF2" }}
+                primaryTypographyProps={{
+                  sx: { fontFamily: "'Merriweather Sans', sans-serif" },
+                }}
               />
             </ListItem>
             <ListItem button onClick={() => navigate("/register")}>
-              <ListItemText primary="Crear Cuenta" sx={{ color: "#903AF2" }} />
+              <ListItemText
+                primary="Crear Cuenta"
+                sx={{ color: "#903AF2" }}
+                primaryTypographyProps={{
+                  sx: { fontFamily: "'Merriweather Sans', sans-serif" },
+                }}
+              />
             </ListItem>
           </List>
         )}
 
         <Divider sx={{ my: 2 }} />
 
-        <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+        <Typography
+          variant="subtitle2"
+          fontWeight="bold"
+          gutterBottom
+          sx={{ fontFamily: "'Red Hat Display', sans-serif" }}
+        >
           Accesos rápidos
         </Typography>
         <List>
           <ListItem button onClick={() => navigate("/precios")}>
-            <ListItemText primary="Planes y precios" />
+            <ListItemText
+              primary="Planes y precios"
+              primaryTypographyProps={{
+                sx: { fontFamily: "'Merriweather Sans', sans-serif" },
+              }}
+            />
           </ListItem>
           <ListItem button onClick={() => navigate("/beneficios")}>
-            <ListItemText primary="Beneficios" />
+            <ListItemText
+              primary="Beneficios"
+              primaryTypographyProps={{
+                sx: { fontFamily: "'Merriweather Sans', sans-serif" },
+              }}
+            />
           </ListItem>
           <ListItem button onClick={() => navigate("/comenzar")}>
-            <ListItemText primary="Cómo empezar" />
+            <ListItemText
+              primary="Cómo empezar"
+              primaryTypographyProps={{
+                sx: { fontFamily: "'Merriweather Sans', sans-serif" },
+              }}
+            />
           </ListItem>
         </List>
       </Box>
     </Box>
-  ); // Mantener o reinsertar drawer según se necesite
+  );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" elevation={0} sx={{ bgcolor: "#ffffff" }}>
         <Toolbar
           sx={{
-            px: { xs: 2, sm: 4 },
+            px: { xs: 2, sm: 4, lg: 0 }, // sacamos el px interno en lg
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-          {/* Logo y menú hamburguesa para XS */}
-          <Box display={{ xs: "flex", lg: "none" }} alignItems="center">
-            <IconButton onClick={handleDrawerToggle} sx={{ color: "#903AF2" }}>
-              <MenuIcon fontSize="large" />
-            </IconButton>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <Typography
-                variant="h5"
-                fontWeight="bold"
-                sx={{
-                  color: "#903AF2",
-                  ml: 2,
-                  fontFamily: "'Segoe UI', sans-serif",
-                }}
+          <Box
+            sx={{
+              width: "100%",
+              px: { lg: 30 }, // padding horizontal como container
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            {/* Logo y menú hamburguesa para XS */}
+            <Box display={{ xs: "flex", lg: "none" }} alignItems="center">
+              <IconButton
+                onClick={handleDrawerToggle}
+                sx={{ color: "#903AF2" }}
               >
-                Ubika
-              </Typography>
-            </Link>
-          </Box>
-
-          {/* Logo + navegación grande para LG y superior */}
-          <Box display={{ xs: "none", lg: "flex" }} alignItems="center" gap={4}>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <Typography
-                variant="h5"
-                fontWeight="bold"
-                sx={{
-                  color: "#903AF2",
-                  fontFamily: "'Segoe UI', sans-serif",
-                }}
-              >
-                Ubika
-              </Typography>
-            </Link>
-            {isAuthenticated ? (
-              <>
-                <Button
-                  onClick={() => navigate("/dashboard")}
-                  sx={{ color: "#2B2B2B" }}
+                <MenuIcon fontSize="large" />
+              </IconButton>
+              <Link to="/" style={{ textDecoration: "none" }}>
+                <Typography
+                  variant="h5"
+                  fontWeight="bold"
+                  sx={{
+                    color: "#903AF2",
+                    ml: 2,
+                    fontFamily: "'Red Hat Display', sans-serif",
+                    fontWeight: 700,
+                  }}
                 >
-                  Dashboard
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button onClick={() => navigate("/precios")}>Precios</Button>
-                <Button onClick={() => navigate("/beneficios")}>
-                  Beneficios
-                </Button>
-                <Button onClick={() => navigate("/comenzar")}>
-                  Cómo empezar
-                </Button>
-              </>
-            )}
-          </Box>
+                  Ubika
+                </Typography>
+              </Link>
+            </Box>
 
-          {/* Íconos derecha */}
-          <Box display="flex" alignItems="center">
-            {isAuthenticated ? (
-              <IconButton onClick={handleAccountClick} sx={{ mx: 1 }}>
-                <Avatar sx={{ width: 32, height: 32 }}>{firstChar}</Avatar>
-              </IconButton>
-            ) : (
-              <IconButton onClick={handleAccountClick} sx={{ mx: 1 }}>
-                <AccountCircle fontSize="large" sx={{ color: "#903AF2" }} />
-              </IconButton>
-            )}
+            {/* Logo + navegación grande para LG y superior */}
+            <Box
+              display={{ xs: "none", lg: "flex" }}
+              alignItems="center"
+              gap={4}
+            >
+              <Link to="/" style={{ textDecoration: "none" }}>
+                <Typography
+                  variant="h5"
+                  fontWeight="bold"
+                  sx={{
+                    color: "#903AF2",
+                    fontFamily: "'Segoe UI', sans-serif",
+                  }}
+                >
+                  Ubika
+                </Typography>
+              </Link>
+              {isAuthenticated ? (
+                <>
+                  <Button
+                    onClick={() => navigate("/dashboard")}
+                    sx={{ color: "#2B2B2B" }}
+                  >
+                    Dashboard
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    onClick={() => navigate("/precios")}
+                    sx={{
+                      color: "#903AF2",
+                      fontWeight: "bold",
+                      "&:hover": { color: "#702ac2" },
+                    }}
+                  >
+                    Precios
+                  </Button>
+                  <Button
+                    onClick={() => navigate("/beneficios")}
+                    sx={{
+                      color: "#903AF2",
+                      fontWeight: "bold",
+                      "&:hover": { color: "#702ac2" },
+                    }}
+                  >
+                    Beneficios
+                  </Button>
+                  <Button
+                    onClick={() => navigate("/comenzar")}
+                    sx={{
+                      color: "#903AF2",
+                      fontWeight: "bold",
+                      "&:hover": { color: "#702ac2" },
+                    }}
+                  >
+                    Cómo empezar
+                  </Button>
+                </>
+              )}
+            </Box>
+
+            {/* Íconos derecha */}
+            <Box display="flex" alignItems="center">
+              {isAuthenticated ? (
+                <IconButton onClick={handleAccountClick} sx={{ mx: 1 }}>
+                  <Avatar sx={{ width: 32, height: 32 }}>{firstChar}</Avatar>
+                </IconButton>
+              ) : (
+                <IconButton onClick={handleAccountClick} sx={{ mx: 1 }}>
+                  <AccountCircle fontSize="large" sx={{ color: "#903AF2" }} />
+                </IconButton>
+              )}
+            </Box>
           </Box>
         </Toolbar>
       </AppBar>

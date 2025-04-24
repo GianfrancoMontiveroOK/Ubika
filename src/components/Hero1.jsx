@@ -1,71 +1,105 @@
 import React from "react";
 import { Box, Typography, Button } from "@mui/material";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 const Hero1 = () => {
-  const scrollToNext = () => {
-    const next = document.getElementById("snap-section-2");
-    if (next) next.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <Box
       id="snap-section-1"
       sx={{
-        height: "100vh",
+        height: "100%",
         scrollSnapAlign: "start",
+        bgcolor: "#903AF2",
+        px: { xs: 3, lg: 30 },
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        bgcolor: "#EAF7CF",
-        px: 3,
-        textAlign: "center",
+        justifyContent: "space-around",
+        position: "relative",
+        color: "white",
+        overflow: "hidden",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: "-20%", // empieza desde fuera del lado izquierdo
+          width: "60%",
+          height: "100%",
+          background:
+            "radial-gradient(circle at left, rgba(255,255,255,0.15) 0%, transparent 80%)",
+          filter: "blur(80px)",
+          zIndex: 0,
+        },
+        zIndex: 1,
       }}
     >
-      <Typography
-        variant="h2"
-        fontWeight="bold"
-        sx={{
-          color: "#903AF2",
-          fontSize: { xs: "2.5rem", sm: "3rem", md: "4rem" },
-          mb: 2,
-        }}
-      >
-        Automatiza y haz crecer tu alojamiento
-      </Typography>
+      {/* Contenido central */}
+      <Box textAlign="center">
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          sx={{
+            color: "#fff",
+            mb: 2,
+            fontSize: { xs: "1.5rem", sm: "2rem" },
+            fontFamily: "'Red Hat Display', sans-serif",
+            fontWeight: 700,
+          }}
+        >
+          GESTIONÁ TU ALOJAMIENTO SIN COMPLICACIONES
+        </Typography>
 
-      <Typography
-        variant="h6"
-        sx={{
-          color: "#2B2B2B",
-          maxWidth: "600px",
-          mb: 4,
-        }}
-      >
-        Con Ubika centralizas reservas, cobros y clientes desde una plataforma
-        profesional. Diseñado para hostales, hoteles y
-        alojamientos con visión de futuro.
-      </Typography>
+        <Typography
+          sx={{
+            mb: 3,
+            color: "#fff",
+            fontFamily: "'Merriweather Sans', sans-serif",
+          }}
+        >
+          Centralizá todas tus reservas, pagos y atención al cliente en una
+          plataforma intuitiva y profesional.
+        </Typography>
 
-      <Button
-        variant="contained"
-        onClick={scrollToNext}
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "#ee964b",
+            color: "#fff",
+            borderRadius: "24px",
+            px: 4,
+            py: 1,
+            fontWeight: "bold",
+            mb: 2,
+            fontFamily: "'Red Hat Display', sans-serif",
+          }}
+        >
+          Tu demo gratis
+        </Button>
+
+        <Typography
+          sx={{
+            mb: 4,
+            fontWeight: 500,
+            fontSize: { xs: "0.95rem", sm: "1rem" },
+            color: "#fff",
+            fontFamily: "'Merriweather Sans', sans-serif",
+          }}
+        >
+          Más información
+        </Typography>
+      </Box>
+
+      {/* Cuña blanca inferior izquierda */}
+      <Box
         sx={{
-          backgroundColor: "#903AF2",
-          color: "white",
-          borderRadius: "24px",
-          px: 4,
-          py: 1,
-          fontSize: "1rem",
-          "&:hover": {
-            backgroundColor: "#702ac2",
-          },
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          width: "100%", // Mitad izquierda horizontal
+          height: "20%", // Altura deseada
+          backgroundColor: "#fff", // Color blanco
+          clipPath: "polygon(0 0, 100% 100%, 0% 100%)", // Triángulo desde arriba a la izquierda
+          zIndex: 2,
         }}
-        endIcon={<ArrowDownwardIcon />}
-      >
-        Descubre cómo funciona
-      </Button>
+      />
     </Box>
   );
 };

@@ -1,9 +1,10 @@
 import React from "react";
-import { Box, Typography, Grid, Paper } from "@mui/material";
+import { Box, Typography, Grid, Paper, Container } from "@mui/material";
 import BoltIcon from "@mui/icons-material/Bolt";
 import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import ShieldIcon from "@mui/icons-material/Shield";
+import CarruselUbika from "./CarruselUbika";
 
 const benefits = [
   {
@@ -39,52 +40,76 @@ const Hero2 = () => {
       sx={{
         height: "100vh",
         scrollSnapAlign: "start",
+        position: "relative", // Necesario para ubicar la cuña
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
+        alignItems: "top",
         bgcolor: "#fff",
-        px: 3,
-        py: 6,
-        textAlign: "center",
+        px: { xs: 3, lg: 15 },
+        overflow: "hidden", // Por si la cuña se sale del borde
       }}
     >
-      <Typography
-        variant="h4"
-        fontWeight="bold"
-        sx={{ color: "#903AF2", mb: 4 }}
-      >
-        Por qué elegir Ubika
-      </Typography>
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          sx={{
+            color: "#903AF2",
+            mb: 4,
+            mt: 5,
+            textAlign: "center",
+            display: {
+              xs: "block",
+              sm: "block",
+              md: "block",
+              lg: "block",
+              xl: "block",
+            },
+          }}
+        >
+          ¿Que incluye Ubika?
+        </Typography>
 
-      <Grid container spacing={4} maxWidth="lg" justifyContent="center">
-        {benefits.map((item, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
-            <Paper
-              elevation={3}
-              sx={{
-                p: 4,
-                height: "100%",
-                borderRadius: "16px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 2,
-                bgcolor: "#F8F8F8",
-              }}
-            >
-              {item.icon}
-              <Typography variant="h6" fontWeight="bold" color="#2B2B2B">
-                {item.title}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {item.description}
-              </Typography>
-            </Paper>
-          </Grid>
-        ))}
-      </Grid>
+        <CarruselUbika></CarruselUbika>
+        <Grid
+          container
+          spacing={4}
+          justifyContent="center"
+          sx={{
+            display: {
+              xs: "none", // oculto en móviles (xs = 0 a 599px)
+              sm: "none", // también oculto en sm si querís mantenerlo solo desde md en adelante
+              md: "flex", // visible desde md en adelante
+            },
+          }}
+        >
+          {benefits.map((item, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <Paper
+                elevation={3}
+                sx={{
+                  p: 4,
+                  height: "80%",
+                  borderRadius: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 2,
+                  bgcolor: "#F8F8F8",
+                  textAlign: "center",
+                }}
+              >
+                {item.icon}
+                <Typography variant="h6" fontWeight="bold" color="#2B2B2B">
+                  {item.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {item.description}
+                </Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
     </Box>
   );
 };

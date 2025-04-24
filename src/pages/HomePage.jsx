@@ -1,27 +1,8 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  Typography,
-  Divider,
-  Drawer,
-  Container,
-  Card,
-  CardMedia,
-  CardContent,
-  CardActions,
-  Grid,
-  Link,
-} from "@mui/material";
-
-import { Fab } from "@mui/material";
-
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import "../styles/homepage.css";
+import { Box, Typography, Button, Grid, Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Hero1 from "../components/Hero1";
 import Hero2 from "../components/Hero2";
-// Componente ShoppingCart
 
 function HomePage({
   products,
@@ -47,12 +28,8 @@ function HomePage({
     width: 100,
     height: 100,
   });
-  // Datos de ejemplo de itemos
-  const navigate = useNavigate();
 
-  const cartbuttonfab = () => {
-    navigate("/pay");
-  };
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -60,13 +37,32 @@ function HomePage({
         height: "100vh",
         overflowY: "scroll",
         scrollSnapType: "y mandatory",
-        backgroundColor: "#eff0d0",
+        scrollBehavior: "smooth",
       }}
     >
-      <Box sx={{ scrollSnapAlign: "start" }}>
+      {/* Sección 1 - Hero1 */}
+      <Box
+        sx={(theme) => ({
+          scrollSnapAlign: "start",
+          height: "100vh",
+          [theme.customBreakpoints.mobileShort]: {
+            height: "100vh", // iPhone SE u otros móviles bajos
+          },
+          [theme.customBreakpoints.mobileTall]: {
+            height: "70vh", // iPhone 14 o móviles altos
+          },
+        })}
+      >
         <Hero1 />
       </Box>
-      <Box sx={{ scrollSnapAlign: "start" }}>
+
+      {/* Sección 2 - Hero2 */}
+      <Box
+        sx={{
+          scrollSnapAlign: "start",
+          height: "100vh",
+        }}
+      >
         <Hero2 />
       </Box>
     </Box>
