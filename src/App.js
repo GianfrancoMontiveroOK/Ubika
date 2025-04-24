@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AuthProvider } from "./context/AuthContext";
 
@@ -72,7 +72,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <KeepAliveService />
-        <BrowserRouter>
+        <HashRouter>
           <Navbar
             setSearchbarVisible={setSearchbarVisible}
             selectedCategory={selectedCategory}
@@ -143,7 +143,7 @@ function App() {
               <Route path="/orders" element={<OrdersPage />} />
             </Route>
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </AuthProvider>
     </ThemeProvider>
   );
