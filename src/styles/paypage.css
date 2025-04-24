@@ -1,0 +1,41 @@
+.conteiner{
+    display: flex;
+    justify-content: center;
+}
+.conteiner .pay{
+    background-color: black;
+}
+
+
+.conteiner .card{
+    background-color: #1e272e;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 5vh;
+}
+
+
+
+.cardlogin .linklogin{
+    text-decoration: none;
+    color: rgb(33, 87, 173);
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.form .item{
+    margin: 2vh;
+}
+
+.form .button{
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}
+

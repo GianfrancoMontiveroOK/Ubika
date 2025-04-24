@@ -1,0 +1,99 @@
+.cardContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 9px;
+}
+
+.cardProduct:hover {
+  transform: scale(1.05); /* Efecto de escala en hover */
+}
+
+.cardProduct img {
+  border-radius: 4px; /* Esquinas redondeadas para la imagen */
+}
+
+.carousel-container1 {
+  width: 100%; /* Ajusta el ancho según tus necesidades */
+  overflow: hidden; /* Evita que el contenido se desborde */
+}
+
+.borderWood {
+  background-image: url("../images/FeedIG/fondoMadera_11zon.webp");
+  background-size: contain;
+  padding: 3vh;
+}
+
+.sale {
+  background-color: #ffc800;
+  border-radius: "50%";
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.cardProduct {
+  flex: 0 0 auto; /* Permite que las tarjetas mantengan su ancho original */
+  margin-right: 10px; /* Ajusta el espacio entre las tarjetas */
+}
+
+.imputbase {
+  border-radius: 40px;
+  padding-top: 10vh;
+  padding-right: 10px;
+  padding-top: 10px;
+}
+.imgproduct {
+  background-color: transparent;
+  width: 120%;
+}
+.cardmedia {
+  height: 200px;
+  background-position: center;
+}
+
+@media (max-width: 650px) {
+  .imgproduct {
+    background-color: transparent;
+    width: 90%;
+  }
+  .carousel-container {
+    background-image: url("../images/FeedIG/fondoMadera_11zon.webp");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%; /* Ajusta el ancho según tus necesidades */
+    overflow: hidden; /* Evita que el contenido se desborde */
+    padding-bottom: 5vh;
+  }
+
+  .cardProduct {
+    flex: 1 1 calc(50%); /* Toma el 50% del ancho menos el espacio del gap */
+    box-sizing: border-box; /* Asegura que el padding y border se incluyan en el ancho total */
+    max-width: calc(50% - 20px);
+
+    transition: transform 0.2s; /* Transición para el hover */
+  }
+
+  .cardContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+  }
+
+  .carousel-container1 {
+    width: 100%; /* Ajusta el ancho según tus necesidades */
+    overflow: hidden; /* Evita que el contenido se desborde */
+  }
+  .carousel-container {
+    width: 100%; /* Ajusta el ancho según tus necesidades */
+    overflow: hidden; /* Evita que el contenido se desborde */
+  }
+}
