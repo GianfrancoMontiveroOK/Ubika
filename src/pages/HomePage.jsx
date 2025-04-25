@@ -3,6 +3,7 @@ import { Box, Typography, Button, Grid, Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Hero1 from "../components/Hero1";
 import Hero2 from "../components/Hero2";
+import Hero3 from "../components/Hero3";
 
 function HomePage({
   products,
@@ -58,12 +59,28 @@ function HomePage({
 
       {/* Sección 2 - Hero2 */}
       <Box
+        sx={(theme) => ({
+          scrollSnapAlign: "start",
+          height: "70vh",
+          [theme.customBreakpoints.mobileShort]: {
+            height: "100vh", // iPhone SE u otros móviles bajos
+          },
+          [theme.customBreakpoints.mobileTall]: {
+            height: "60vh", // iPhone 14 o móviles altos
+          },
+        })}
+      >
+        <Hero2 />
+      </Box>
+      {/* Sección 3 - Hero3 */}
+
+      <Box
         sx={{
           scrollSnapAlign: "start",
           height: "100vh",
         }}
       >
-        <Hero2 />
+        <Hero3 />
       </Box>
     </Box>
   );

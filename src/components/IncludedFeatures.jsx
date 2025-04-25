@@ -63,6 +63,13 @@ export default function IncludedFeatures() {
                 color: selected === feat.id ? "white" : "black",
                 fontFamily: "'Merriweather Sans', sans-serif",
                 fontWeight: "bold",
+                fontSize: {
+                  xs: "0.75rem",
+                  sm: "0.9rem",
+                  md: "1rem",
+                  lg: "1.05rem",
+                  xl: "1.1rem",
+                },
               }}
             >
               {feat.label}
@@ -85,16 +92,32 @@ export default function IncludedFeatures() {
             {/* Columna izquierda - Texto */}
             <Grid item xs={12} md={6}>
               <Typography
-                variant="h5"
                 fontWeight="bold"
                 gutterBottom
-                sx={{ fontFamily: "'Red Hat Display', sans-serif" }}
+                sx={{
+                  fontFamily: "'Red Hat Display', sans-serif",
+                  fontSize: {
+                    xs: "1.4rem",
+                    sm: "1.6rem",
+                    md: "1.8rem",
+                    lg: "2rem",
+                    xl: "2.2rem",
+                  },
+                }}
               >
                 {featureDetails[selected].title}
               </Typography>
               <Typography
-                variant="body1"
-                sx={{ fontFamily: "'Merriweather Sans', sans-serif" }}
+                sx={{
+                  fontFamily: "'Merriweather Sans', sans-serif",
+                  fontSize: {
+                    xs: "0.95rem",
+                    sm: "1rem",
+                    md: "1.05rem",
+                    lg: "1.1rem",
+                    xl: "1.15rem",
+                  },
+                }}
               >
                 {featureDetails[selected].description}
               </Typography>

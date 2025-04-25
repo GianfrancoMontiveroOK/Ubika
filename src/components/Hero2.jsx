@@ -5,6 +5,7 @@ import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import ShieldIcon from "@mui/icons-material/Shield";
 import IncludedFeatures from "./IncludedFeatures";
+import IncludedFeaturesCarousel from "./IncludedFeaturesCarousel";
 
 const benefits = [
   {
@@ -38,7 +39,7 @@ const Hero2 = () => {
     <Box
       id="snap-section-2"
       sx={{
-        height: "100vh",
+        height: "100%",
         scrollSnapAlign: "start",
         position: "relative", // Necesario para ubicar la cuña
         display: "flex",
@@ -70,7 +71,12 @@ const Hero2 = () => {
         ¿Que incluye Ubika?
       </Typography>
 
-      <IncludedFeatures></IncludedFeatures>
+      <Box sx={{ display: { xs: "none", lg: "block" } }}>
+        <IncludedFeatures />
+      </Box>
+      <Box sx={{ display: { xs: "block", lg: "none" } }}>
+        <IncludedFeaturesCarousel />
+      </Box>
     </Box>
   );
 };
