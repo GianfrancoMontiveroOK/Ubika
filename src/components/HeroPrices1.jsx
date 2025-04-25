@@ -93,7 +93,7 @@ export default function HeroPrices1() {
                     fontFamily: "'Red Hat Display', sans-serif",
                   }}
                 >
-                  Desde $24
+                  Desde $72
                 </Typography>
                 <Typography
                   variant="subtitle1"
@@ -165,7 +165,7 @@ export default function HeroPrices1() {
                     fontFamily: "'Red Hat Display', sans-serif",
                   }}
                 >
-                  Desde $49
+                  Desde $110
                 </Typography>
                 <Typography
                   variant="subtitle1"
