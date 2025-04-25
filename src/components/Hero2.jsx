@@ -4,7 +4,7 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import ShieldIcon from "@mui/icons-material/Shield";
-import CarruselUbika from "./CarruselUbika";
+import IncludedFeatures from "./IncludedFeatures";
 
 const benefits = [
   {
@@ -49,67 +49,28 @@ const Hero2 = () => {
         overflow: "hidden", // Por si la cuña se sale del borde
       }}
     >
-        <Typography
-          variant="h4"
-          fontWeight="bold"
-          sx={{
-            color: "#903AF2",
-            mb: 4,
-            mt: 5,
-            textAlign: "center",
-            display: {
-              xs: "block",
-              sm: "block",
-              md: "block",
-              lg: "block",
-              xl: "block",
-            },
-          }}
-        >
-          ¿Que incluye Ubika?
-        </Typography>
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        sx={{
+          color: "#903AF2",
+          mb: 4,
+          mt: 5,
+          textAlign: "center",
+          fontFamily: "'Red Hat Display', sans-serif",
+          display: {
+            xs: "block",
+            sm: "block",
+            md: "block",
+            lg: "block",
+            xl: "block",
+          },
+        }}
+      >
+        ¿Que incluye Ubika?
+      </Typography>
 
-        <CarruselUbika></CarruselUbika>
-        <Grid
-          container
-          spacing={4}
-          justifyContent="center"
-          sx={{
-            display: {
-              xs: "none", // oculto en móviles (xs = 0 a 599px)
-              sm: "none", // también oculto en sm si querís mantenerlo solo desde md en adelante
-              md: "flex", // visible desde md en adelante
-            },
-          }}
-        >
-          {benefits.map((item, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-              <Paper
-                elevation={3}
-                sx={{
-                  p: 4,
-                  height: "80%",
-                  borderRadius: "16px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 2,
-                  bgcolor: "#F8F8F8",
-                  textAlign: "center",
-                }}
-              >
-                {item.icon}
-                <Typography variant="h6" fontWeight="bold" color="#2B2B2B">
-                  {item.title}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {item.description}
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
+      <IncludedFeatures></IncludedFeatures>
     </Box>
   );
 };

@@ -20,6 +20,7 @@ import RecipePage from "./pages/RecipePage";
 import CatalogPage from "./pages/CatalogPage";
 import KeepAliveService from "./KeepAliveService";
 import DashboardPage from "./pages/DashboardPage";
+import PricesPages from "./pages/PricesPages";
 
 const theme = createTheme({
   palette: {
@@ -111,6 +112,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/recipe" element={<RecipePage />} />
+            <Route path="/precios" element={<PricesPages />} />
             <Route
               path="/catalog"
               element={

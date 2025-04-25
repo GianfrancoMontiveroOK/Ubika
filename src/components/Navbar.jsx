@@ -179,7 +179,7 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
           <Box
             sx={{
               width: "100%",
-              px: { lg: 30 }, // padding horizontal como container
+              px: { sm: 10, lg: 30, xl: 40 }, // padding horizontal como container
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
@@ -211,7 +211,7 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
 
             {/* Logo + navegación grande para LG y superior */}
             <Box
-              display={{ xs: "none", lg: "flex" }}
+              display={{ xs: "none", sm: "none", lg: "flex" }}
               alignItems="center"
               gap={4}
             >
@@ -234,6 +234,36 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
                     sx={{ color: "#2B2B2B" }}
                   >
                     Dashboard
+                  </Button>
+                  <Button
+                    onClick={() => navigate("/precios")}
+                    sx={{
+                      color: "#903AF2",
+                      fontWeight: "bold",
+                      "&:hover": { color: "#702ac2" },
+                    }}
+                  >
+                    Precios
+                  </Button>
+                  <Button
+                    onClick={() => navigate("/beneficios")}
+                    sx={{
+                      color: "#903AF2",
+                      fontWeight: "bold",
+                      "&:hover": { color: "#702ac2" },
+                    }}
+                  >
+                    Beneficios
+                  </Button>
+                  <Button
+                    onClick={() => navigate("/comenzar")}
+                    sx={{
+                      color: "#903AF2",
+                      fontWeight: "bold",
+                      "&:hover": { color: "#702ac2" },
+                    }}
+                  >
+                    Cómo empezar
                   </Button>
                 </>
               ) : (

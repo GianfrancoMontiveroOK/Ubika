@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, TextField } from "@mui/material";
 
 const Hero1 = () => {
   return (
@@ -9,7 +9,7 @@ const Hero1 = () => {
         height: "100%",
         scrollSnapAlign: "start",
         bgcolor: "#903AF2",
-        px: { xs: 3, lg: 30 },
+        px: { xs: 3, mb:20, lg: 40, xl: 40 }, // padding horizontal como container
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-around",
@@ -57,7 +57,29 @@ const Hero1 = () => {
           Centralizá todas tus reservas, pagos y atención al cliente en una
           plataforma intuitiva y profesional.
         </Typography>
-
+        <Box
+          sx={{
+            display: { xs: "none", sm: "flex", lg: "flex" },
+            justifyContent: "center",
+            mt: 4,
+            mb: 2,
+          }}
+        >
+          <TextField
+            variant="outlined"
+            placeholder="¿Cuál es tu email de trabajo?"
+            type="mail"
+            sx={{
+              backgroundColor: "#fff",
+              borderRadius: "8px",
+              width: "50%",
+              input: {
+                paddingY: 1.5,
+                paddingX: 2,
+              },
+            }}
+          />
+        </Box>
         <Button
           variant="contained"
           sx={{
