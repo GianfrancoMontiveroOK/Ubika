@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import HeroChannel1 from "../components/HeroChannel1";
 import HeroChannel2 from "../components/HeroChannel2";
+import HeroChannel3 from "../components/HeroChannel3";
 
 function ChannelManagerPage({}) {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ function ChannelManagerPage({}) {
       <Box
         sx={(theme) => ({
           scrollSnapAlign: "start",
-          height: "70vh",
+          height: "80vh",
           [theme.customBreakpoints.mobileShort]: {
             height: "100vh", // iPhone SE u otros móviles bajos
           },
@@ -36,16 +37,30 @@ function ChannelManagerPage({}) {
       <Box
         sx={(theme) => ({
           scrollSnapAlign: "start",
-          height: "70vh",
+          height: "100vh",
           [theme.customBreakpoints.mobileShort]: {
             height: "100vh", // iPhone SE u otros móviles bajos
           },
           [theme.customBreakpoints.mobileTall]: {
-            height: "70vh", // iPhone 14 o móviles altos
+            height: "100vh", // iPhone 14 o móviles altos
           },
         })}
       >
         <HeroChannel2 />
+      </Box>
+      <Box
+        sx={(theme) => ({
+          scrollSnapAlign: "start",
+          height: "100vh",
+          [theme.customBreakpoints.mobileShort]: {
+            height: "100vh", // iPhone SE u otros móviles bajos
+          },
+          [theme.customBreakpoints.mobileTall]: {
+            height: "100vh", // iPhone 14 o móviles altos
+          },
+        })}
+      >
+        <HeroChannel3 />
       </Box>
     </Box>
   );

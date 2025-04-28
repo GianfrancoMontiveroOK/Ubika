@@ -19,23 +19,25 @@ function Footer() {
       sx={{
         background: "linear-gradient(135deg, #903AF2 0%, #6A1FBF 100%)",
         color: "#ECECEC",
-        py: 6,
+        py: 8,
       }}
     >
       <Container maxWidth="lg">
-        <Grid
-          container
-          spacing={4}
-          justifyContent="center"
-          textAlign="center"
-        >
+        <Grid container spacing={6} justifyContent="center" textAlign="center">
           {/* Soluciones */}
           <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom fontWeight="bold">
               Soluciones
             </Typography>
             {["Software hotelero", "Gestor de canales para AirBnB"].map((text) => (
-              <Link href="#" underline="hover" color="inherit" display="block" key={text}>
+              <Link
+                href="#"
+                underline="hover"
+                color="inherit"
+                display="block"
+                key={text}
+                sx={{ fontSize: "14px", mb: 1 }}
+              >
                 {text}
               </Link>
             ))}
@@ -43,7 +45,7 @@ function Footer() {
 
           {/* Comercio hotelero */}
           <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom fontWeight="bold">
               Comercio hotelero
             </Typography>
             {[
@@ -56,7 +58,14 @@ function Footer() {
               "Sistema de distribución global (GDS)",
               "Tienda de aplicaciones para hoteles",
             ].map((text) => (
-              <Link href="#" underline="hover" color="inherit" display="block" key={text}>
+              <Link
+                href="#"
+                underline="hover"
+                color="inherit"
+                display="block"
+                key={text}
+                sx={{ fontSize: "14px", mb: 1 }}
+              >
                 {text}
               </Link>
             ))}
@@ -64,7 +73,7 @@ function Footer() {
 
           {/* Recursos */}
           <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom fontWeight="bold">
               Recursos
             </Typography>
             {[
@@ -76,7 +85,14 @@ function Footer() {
               "AWS",
               "Vídeos evento Sync",
             ].map((text) => (
-              <Link href="#" underline="hover" color="inherit" display="block" key={text}>
+              <Link
+                href="#"
+                underline="hover"
+                color="inherit"
+                display="block"
+                key={text}
+                sx={{ fontSize: "14px", mb: 1 }}
+              >
                 {text}
               </Link>
             ))}
@@ -84,7 +100,7 @@ function Footer() {
 
           {/* Integraciones */}
           <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom fontWeight="bold">
               Integraciones
             </Typography>
             {[
@@ -93,7 +109,14 @@ function Footer() {
               "Buscador de PMS",
               "Programas de asociados",
             ].map((text) => (
-              <Link href="#" underline="hover" color="inherit" display="block" key={text}>
+              <Link
+                href="#"
+                underline="hover"
+                color="inherit"
+                display="block"
+                key={text}
+                sx={{ fontSize: "14px", mb: 1 }}
+              >
                 {text}
               </Link>
             ))}
@@ -101,7 +124,7 @@ function Footer() {
 
           {/* Empresa */}
           <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom fontWeight="bold">
               Empresa
             </Typography>
             {[
@@ -113,16 +136,27 @@ function Footer() {
               "Eventos",
               "Avisos legales",
             ].map((text) => (
-              <Link href="#" underline="hover" color="inherit" display="block" key={text}>
+              <Link
+                href="#"
+                underline="hover"
+                color="inherit"
+                display="block"
+                key={text}
+                sx={{ fontSize: "14px", mb: 1 }}
+              >
                 {text}
               </Link>
             ))}
           </Grid>
         </Grid>
 
-        {/* Línea separadora */}
-        <Box mt={5} borderTop="1px solid #ECECEC" pt={3} textAlign="center">
-          <Typography variant="body2" color="#ECECEC">
+        {/* Línea separadora y social icons */}
+        <Box mt={8} borderTop="1px solid #ECECEC" pt={4} textAlign="center">
+          <Typography
+            variant="body2"
+            color="#ECECEC"
+            sx={{ fontFamily: "'Merriweather Sans', sans-serif", mb: 2 }}
+          >
             © Ubika 2025 |{" "}
             <Link
               href="https://drive.google.com/file/d/1sqeyB3MRJbD8yStOOGXMGq9PTS4EoPmJ/view?usp=sharing"
@@ -131,7 +165,7 @@ function Footer() {
               underline="hover"
               color="inherit"
             >
-              Términos y Condiciones de Uso
+              Términos y Condiciones
             </Link>{" "}
             |{" "}
             <Link
@@ -145,10 +179,10 @@ function Footer() {
             </Link>
           </Typography>
 
-          {/* Íconos sociales */}
-          <Box mt={2}>
+          {/* Íconos Sociales */}
+          <Box mt={1} display="flex" justifyContent="center" gap={1}>
             {[InstagramIcon, FacebookIcon, TwitterIcon, LinkedInIcon, YouTubeIcon].map((Icon, index) => (
-              <IconButton key={index} href="#" color="inherit">
+              <IconButton key={index} href="#" color="inherit" size="large">
                 <Icon />
               </IconButton>
             ))}
