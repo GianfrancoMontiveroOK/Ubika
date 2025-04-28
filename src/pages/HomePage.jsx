@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Hero1 from "../components/Hero1";
 import Hero2 from "../components/Hero2";
 import Hero3 from "../components/Hero3";
+import Hero4 from "../components/Hero4";
+import Footer from "../components/Footer";
 
 function HomePage({
   products,
@@ -61,26 +63,57 @@ function HomePage({
       <Box
         sx={(theme) => ({
           scrollSnapAlign: "start",
-          height: "70vh",
+          height: "80vh",
           [theme.customBreakpoints.mobileShort]: {
             height: "100vh", // iPhone SE u otros móviles bajos
           },
           [theme.customBreakpoints.mobileTall]: {
-            height: "60vh", // iPhone 14 o móviles altos
+            height: "70vh", // iPhone 14 o móviles altos
           },
         })}
       >
         <Hero2 />
       </Box>
+
       {/* Sección 3 - Hero3 */}
+      <Box
+        sx={(theme) => ({
+          scrollSnapAlign: "start",
+          height: "100vh",
+          overflow: "hidden",
+          [theme.breakpoints.down("md")]: {
+            overflow: "hidden", // Sigue ocultando en pantallas chicas
+          },
+        })}
+      >
+        <Box
+          sx={(theme) => ({
+            height: "100%",
+            overflowY: "visible", // Visible por defecto (computadoras)
+            [theme.breakpoints.down("md")]: {
+              overflowY: "100%", // Solo en móviles permitir scroll interno
+            },
+          })}
+        >
+          <Hero3 />
+        </Box>
+      </Box>
+
+      {/* Sección 4 - Hero4 */}
 
       <Box
         sx={{
           scrollSnapAlign: "start",
-          height: "100vh",
         }}
       >
-        <Hero3 />
+        <Hero4 />
+      </Box>
+      <Box
+        sx={{
+          scrollSnapAlign: "start",
+        }}
+      >
+        <Footer />
       </Box>
     </Box>
   );

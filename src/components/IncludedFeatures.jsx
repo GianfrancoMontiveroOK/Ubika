@@ -82,7 +82,6 @@ export default function IncludedFeatures() {
         <Paper
           elevation={3}
           sx={{
-            maxWidth: 800,
             mx: "auto",
             p: 4,
             borderRadius: 4,

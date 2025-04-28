@@ -1,111 +1,160 @@
 import React from "react";
 import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  Box,
+  Container,
+  Grid,
   Typography,
   Link,
   IconButton,
-  Grid,
-  Divider,
-  Box,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import TwitterIcon from "@mui/icons-material/Twitter";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import YouTubeIcon from "@mui/icons-material/YouTube";
-import VisaIcon from "@mui/icons-material/CreditCard"; // You may need to import an appropriate icon
-import MasterCardIcon from "@mui/icons-material/CreditCard"; // You may need to import an appropriate icon
-import HeadsetMicIcon from "@mui/icons-material/HeadsetMic";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import TwitterIcon from "@mui/icons-material/Twitter";
 
 function Footer() {
-  const handleWhatsAppClick = () => {
-    window.location.href = "https://wa.me/message/HOYXZTTFNXNZH1";
-  };
-
   return (
     <Box
       sx={{
-        backgroundColor: "#6dbdb2 ",
-        color: "#fff",
-        padding: "2rem",
-        fontFamily: "Microsoft New Tai Lue",
+        background: "linear-gradient(135deg, #903AF2 0%, #6A1FBF 100%)",
+        color: "#ECECEC",
+        py: 6,
       }}
     >
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Typography
-            sx={{
-              fontFamily: "Microsoft New Tai Lue",
-            }}
-            v
-            variant="h6"
-          >
-            Síguenos
+      <Container maxWidth="lg">
+        <Grid
+          container
+          spacing={4}
+          justifyContent="center"
+          textAlign="center"
+        >
+          {/* Soluciones */}
+          <Grid item xs={12} sm={6} md={2}>
+            <Typography variant="h6" gutterBottom>
+              Soluciones
+            </Typography>
+            {["Software hotelero", "Gestor de canales para AirBnB"].map((text) => (
+              <Link href="#" underline="hover" color="inherit" display="block" key={text}>
+                {text}
+              </Link>
+            ))}
+          </Grid>
+
+          {/* Comercio hotelero */}
+          <Grid item xs={12} sm={6} md={2}>
+            <Typography variant="h6" gutterBottom>
+              Comercio hotelero
+            </Typography>
+            {[
+              "Gestor de canales para hoteles",
+              "Motor de reservas para hoteles",
+              "Creador de sitios web para hoteles",
+              "Gestión inteligente de tarifas hoteleras",
+              "Metabuscadores para hoteles",
+              "Procesamiento de pagos hoteleros",
+              "Sistema de distribución global (GDS)",
+              "Tienda de aplicaciones para hoteles",
+            ].map((text) => (
+              <Link href="#" underline="hover" color="inherit" display="block" key={text}>
+                {text}
+              </Link>
+            ))}
+          </Grid>
+
+          {/* Recursos */}
+          <Grid item xs={12} sm={6} md={2}>
+            <Typography variant="h6" gutterBottom>
+              Recursos
+            </Typography>
+            {[
+              "Distribución",
+              "Tecnología",
+              "Mercadotecnia",
+              "Grupos hoteleros",
+              "Casos de éxito",
+              "AWS",
+              "Vídeos evento Sync",
+            ].map((text) => (
+              <Link href="#" underline="hover" color="inherit" display="block" key={text}>
+                {text}
+              </Link>
+            ))}
+          </Grid>
+
+          {/* Integraciones */}
+          <Grid item xs={12} sm={6} md={2}>
+            <Typography variant="h6" gutterBottom>
+              Integraciones
+            </Typography>
+            {[
+              "Aplicación de asociados integrados",
+              "Encuentra a un experto",
+              "Buscador de PMS",
+              "Programas de asociados",
+            ].map((text) => (
+              <Link href="#" underline="hover" color="inherit" display="block" key={text}>
+                {text}
+              </Link>
+            ))}
+          </Grid>
+
+          {/* Empresa */}
+          <Grid item xs={12} sm={6} md={2}>
+            <Typography variant="h6" gutterBottom>
+              Empresa
+            </Typography>
+            {[
+              "Contáctanos",
+              "Soporte",
+              "Facturación y pagos",
+              "Empleo",
+              "Últimas noticias",
+              "Eventos",
+              "Avisos legales",
+            ].map((text) => (
+              <Link href="#" underline="hover" color="inherit" display="block" key={text}>
+                {text}
+              </Link>
+            ))}
+          </Grid>
+        </Grid>
+
+        {/* Línea separadora */}
+        <Box mt={5} borderTop="1px solid #ECECEC" pt={3} textAlign="center">
+          <Typography variant="body2" color="#ECECEC">
+            © Ubika 2025 |{" "}
+            <Link
+              href="https://drive.google.com/file/d/1sqeyB3MRJbD8yStOOGXMGq9PTS4EoPmJ/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="hover"
+              color="inherit"
+            >
+              Términos y Condiciones de Uso
+            </Link>{" "}
+            |{" "}
+            <Link
+              href="https://www.webprofitdesign.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="hover"
+              color="inherit"
+            >
+              Preferencias
+            </Link>
           </Typography>
-          <IconButton
-            href="https://www.facebook.com/profile.php?id=100079304161207&locale=es_LA"
-            target="_blank"
-            color="inherit"
-          >
-            <FacebookIcon />
-          </IconButton>
-          <IconButton
-            href="https://www.instagram.com/hostalbichon.chile/"
-            target="_blank"
-            color="inherit"
-          >
-            <InstagramIcon />
-          </IconButton>
 
-          <IconButton
-            href="https://wa.me/56930138680?text=¡Hola!%20Vengo%20desde%20la%20web%20y%20me%20gustaría%20recibir%20ayuda.%20¿Podrías%20asistirme%3F"
-            color="inherit"
-          >
-            <WhatsAppIcon />
-          </IconButton>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <Typography
-            sx={{
-              fontFamily: "Microsoft New Tai Lue",
-            }}
-            variant="h6"
-          >
-            Medios de Pago
-          </Typography>
-          <IconButton color="inherit">
-            <VisaIcon />
-            Visa
-          </IconButton>
-          <IconButton color="inherit">
-            <MasterCardIcon />
-            Mastercard
-          </IconButton>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <Typography variant="h6">Atención al Cliente</Typography>
-          <Typography>+56930138680</Typography>
-          <Typography>Chile, O'Higgins, Pichilemu </Typography>
-        </Grid>
-      </Grid>
-
-      <Divider sx={{ margin: "2rem 0", backgroundColor: "white" }} />
-      <Link
-        href="https://hostalbichon.com/#/43748641"
-        color="secondary"
-        underline="none"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Typography variant="body2" align="center" sx={{ color: "#fff" }}>
-          &copy; 2024 Powered By Webprofit
-        </Typography>
-      </Link> 
+          {/* Íconos sociales */}
+          <Box mt={2}>
+            {[InstagramIcon, FacebookIcon, TwitterIcon, LinkedInIcon, YouTubeIcon].map((Icon, index) => (
+              <IconButton key={index} href="#" color="inherit">
+                <Icon />
+              </IconButton>
+            ))}
+          </Box>
+        </Box>
+      </Container>
     </Box>
   );
 }

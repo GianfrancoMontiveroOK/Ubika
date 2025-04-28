@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, Container, Typography, Grid, Paper, Link } from "@mui/material";
+import AutoModeIcon from "@mui/icons-material/AutoMode";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
 
 const rotatingTexts = [
   "Resultados reales",
@@ -12,16 +15,21 @@ const cards = [
     title: "Automatización",
     description:
       "Ahorra tiempo y evita errores con procesos automáticos para reservas y pagos.",
+    icon: <AutoModeIcon sx={{ fontSize: 50, color: "#903af2", mb: 2 }} />,
   },
   {
     title: "Aumento de reservas",
     description:
       "Impulsa tus ventas directas con un motor de reservas optimizado.",
+    icon: <TrendingUpIcon sx={{ fontSize: 50, color: "#903af2", mb: 2 }} />,
   },
   {
     title: "Gestión simplificada",
     description:
       "Controlá tu alojamiento desde un solo panel con acceso seguro y en tiempo real.",
+    icon: (
+      <DashboardCustomizeIcon sx={{ fontSize: 50, color: "#903af2", mb: 2 }} />
+    ),
   },
 ];
 
@@ -36,9 +44,16 @@ export default function BenefitsShowcase() {
   }, []);
 
   return (
-    <Box sx={{ backgroundColor: "#ffffff", py: 10 }}>
+    <Box
+      sx={{
+        backgroundColor: "#ffffff",
+        height: "100%",
+        alignContent: "center",
+        textAlign: "center",
+      }}
+    >
       <Container maxWidth="lg">
-        <Box sx={{ textAlign: "center", mb: 6 }}>
+        <Box sx={{ mb: 6 }}>
           <Typography
             fontWeight="bold"
             sx={{
@@ -83,6 +98,9 @@ export default function BenefitsShowcase() {
                   sx={{
                     p: 4,
                     height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                     transition: "transform 0.3s ease, box-shadow 0.3s ease",
                     borderRadius: 3,
                     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
@@ -94,6 +112,7 @@ export default function BenefitsShowcase() {
                     },
                   }}
                 >
+                  {card.icon}
                   <Typography
                     fontWeight="bold"
                     gutterBottom

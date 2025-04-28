@@ -21,6 +21,8 @@ import CatalogPage from "./pages/CatalogPage";
 import KeepAliveService from "./KeepAliveService";
 import DashboardPage from "./pages/DashboardPage";
 import PricesPages from "./pages/PricesPages";
+import Footer from "./components/Footer";
+import ChannelManagerPage from "./pages/ChannelManagerPage";
 
 const theme = createTheme({
   palette: {
@@ -130,6 +132,7 @@ function App() {
                 />
               }
             />
+            <Route path="/channel-manager" element={<ChannelManagerPage />} />
             <Route element={<ProtectedRoute />}>
               <Route
                 path="/pay"
