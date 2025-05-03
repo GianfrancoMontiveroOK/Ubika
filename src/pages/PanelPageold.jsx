@@ -59,7 +59,7 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-  Title,
+  Title,message
   Tooltip,
   Legend,
 } from "chart.js";
