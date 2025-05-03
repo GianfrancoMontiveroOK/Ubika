@@ -14,6 +14,7 @@ import {
   TextField,
   FormControl,
   InputLabel,
+  Card,
 } from "@mui/material";
 import { eachDayOfInterval, startOfMonth, endOfMonth } from "date-fns";
 import { QRCodeCanvas } from "qrcode.react"; // Cambié la importación aquí
@@ -32,27 +33,47 @@ const convertToUTCDate = (isoString) => {
   );
 };
 
-const CalendarView = ({ nextReservations }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedReservation, setSelectedReservation] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState(new Date());
-  const [expandedReservation, setExpandedReservation] = useState(null);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [modalOpen2, setModalOpen2] = useState(false);
-  const [amount, setAmount] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
-  const [employee, setEmployee] = useState("");
-  const [generatedLink, setGeneratedLink] = useState(""); // Guarda el enlace generado
-  const [modalOpen3, setModalOpen3] = useState(false); // Controla la visibilidad del modal
-  const [copied, setCopied] = useState(false); // Indica si el enlace se copió correctamente
-  const [newStartDate, setNewStartDate] = useState("");
-  const [newEndDate, setNewEndDate] = useState("");
-  const [newAmount, setNewAmount] = useState(0);
-  const [selectedBedId, setSelectedBedId] = useState(null);
-  const [modalOpenRoom, setModalOpenRoom] = useState(false);
-  const [selectedRoom, setSelectedRoom] = useState("");
-
+const CalendarView = ({
+  nextReservations,
+  modalOpen,
+  setModalOpen,
+  selectedReservation,
+  setSelectedReservation,
+  selectedMonth,
+  setSelectedMonth,
+  expandedReservation,
+  setExpandedReservation,
+  isDeleteModalOpen,
+  setIsDeleteModalOpen,
+  isEditModalOpen,
+  setIsEditModalOpen,
+  modalOpen2,
+  setModalOpen2,
+  amount,
+  setAmount,
+  paymentMethod,
+  setPaymentMethod,
+  employee,
+  setEmployee,
+  generatedLink,
+  setGeneratedLink,
+  modalOpen3,
+  setModalOpen3,
+  copied,
+  setCopied,
+  newStartDate,
+  setNewStartDate,
+  newEndDate,
+  setNewEndDate,
+  newAmount,
+  setNewAmount,
+  selectedBedId,
+  setSelectedBedId,
+  modalOpenRoom,
+  setModalOpenRoom,
+  selectedRoom,
+  setSelectedRoom,
+}) => {
   useEffect(() => {
     if (selectedReservation) {
       setNewStartDate(selectedReservation?.startDate || "");
@@ -107,146 +128,63 @@ const CalendarView = ({ nextReservations }) => {
     setIsDeleteModalOpen(false);
   };
 
-  // 📌 Elimina la reserva después de confirmar
-  const handleDelete = async () => {
-    try {
-      const result = await deleteReserve({ body: selectedBedId }); // 📌 Llamada a la API con el ID correcto
-      alert(result.message || "Reserva eliminada correctamente.");
-    } catch (error) {
-      alert(`Error: ${error.message}`);
-    } finally {
-      setIsDeleteModalOpen(false); // 📌 Cierra el modal
-      window.location.reload(); // 📌 Recarga la página
-    }
-  };
-
   const handleOpenReservation = (reservations, day) => {
     setSelectedReservation({ reservations, day });
     setModalOpen(true);
-  };
-  const handleGenerateLink = (bedsidselect) => {
-    if (!bedsidselect) {
-      console.error("Error: No se recibió un ID válido para la reserva.");
-      return;
-    }
-    console.log("Generando link para bedsid:", bedsidselect);
-
-    const baseUrl = `${window.location.origin}/#/completepay`;
-    const params = new URLSearchParams({ bedsid: bedsidselect });
-
-    const fullUrl = `${baseUrl}?${params.toString()}`;
-    setGeneratedLink(fullUrl);
-    setModalOpen3(true);
-    setCopied(false);
-  };
-
-  const handleCopyLink = () => {
-    navigator.clipboard
-      .writeText(generatedLink)
-      .then(() => alert("Enlace copiado al portapapeles: " + generatedLink))
-      .catch((err) => console.error("Error al copiar el enlace:", err));
   };
 
   const handleExpandReservation = (reservation) => {
     setSelectedBedId(reservation.idbeds);
     setExpandedReservation(reservation);
   };
-  const handleUpdateReservation = async () => {
-    try {
-      const updateData = {
-        bedsid: selectedBedId, // Recibir el ID de la reserva desde el botón
-        updates: {
-          startDate: newStartDate,
-          endDate: newEndDate,
-          amount: newAmount,
-        },
-      };
 
-      const result = await updateReservation(updateData); // Llamada a la API consolidada
-      console.log(result);
-      if (result.data.success === true) {
-        handleCloseEditModal(); // Cerrar el modal
-        window.location.reload(); // Reiniciar la página
-      } else {
-        alert(`Error: ${result.message}`); // Mostrar mensaje de error
-      }
-    } catch (error) {
-      console.error("Error en la actualización:", error);
-      alert("Ocurrió un error al actualizar la reserva."); // Mostrar error genérico
-    }
-  };
-  // Función para manejar la actualización del nombre de la habitación
-  const handleUpdateRoomName = async () => {
-    try {
-      const updateData = {
-        bedsid: selectedBedId, // ID de la reserva seleccionado
-        updates: {
-          "nombre habitación": selectedRoom, // Nueva habitación seleccionada
-        },
-      };
-
-      const result = await updateReservation(updateData); // Llamada a la API
-
-      if (result.data.success) {
-        setModalOpenRoom(false); // Cerrar el modal si la actualización fue exitosa
-        window.location.reload(); // Recargar la página
-      } else {
-        alert(`Error: ${result.message}`); // Mostrar mensaje de error si falla
-      }
-    } catch (error) {
-      console.error("Error al actualizar la habitación:", error);
-      alert("Ocurrió un error al actualizar la habitación."); // Mostrar mensaje genérico de error
-    }
-  };
-
-  // Función para manejar el pago manual y enviar los datos al backend
-  const handleChargePayment = async () => {
-    try {
-      const paymentData = {
-        bedsid: selectedBedId, // ID de la reserva seleccionado
-        updates: {
-          seña: amount, // Monto ingresado
-          Pago: paymentMethod, // Método de pago seleccionado
-          "ingreso x": employee, // Empleado que registra el pago
-        },
-      };
-
-      const result = await ChargePayment(paymentData); // Llamada a la API
-
-      if (result.data.success) {
-        setModalOpen2(false); // Cerrar el modal si el pago se realizó con éxito
-        window.location.reload(); // Recargar la página
-      } else {
-        alert(`Error: ${result.message}`); // Mostrar mensaje de error si falla
-      }
-    } catch (error) {
-      console.error("Error en el pago manual:", error);
-      alert("Ocurrió un error al procesar el pago."); // Mostrar mensaje genérico de error
-    }
-  };
   return (
-    <Box sx={{ backgroundColor: "#fff" }}>
-      <AppBar position="sticky" color="primary">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Calendario de Reservas
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
-      <Box sx={{ p: 2 }}>
+    <Box>
+      <Box sx={{ mt: 1, mb: 1, ml: 1 }}>
         <Select
           value={selectedMonth.toISOString().slice(0, 7)}
           onChange={(e) => {
             const [year, month] = e.target.value.split("-");
             setSelectedMonth(new Date(parseInt(year), parseInt(month) - 1, 1));
           }}
-          sx={{ minWidth: 200 }}
+          displayEmpty
+          sx={{
+            minWidth: 220,
+            height: 40,
+            backgroundColor: "#fff",
+            color: "#565254",
+            borderRadius: "8px",
+            px: 2,
+            fontWeight: 500,
+            fontSize: "14px",
+            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #ccc",
+            transition: "border 0.3s",
+            "&:hover": {
+              borderColor: "#903AF2",
+            },
+            "&.Mui-focused": {
+              borderColor: "#903AF2",
+            },
+            "& .MuiSelect-icon": {
+              color: "#565254",
+            },
+          }}
         >
           {[...Array(12).keys()].map((i) => {
             const month = new Date(new Date().getFullYear(), i, 1);
             return (
-              <MenuItem key={i} value={month.toISOString().slice(0, 7)}>
+              <MenuItem
+                key={i}
+                value={month.toISOString().slice(0, 7)}
+                sx={{
+                  color: "#565254",
+                  fontSize: "14px",
+                  "&:hover": {
+                    backgroundColor: "#EAF7CF",
+                  },
+                }}
+              >
                 {month.toLocaleString("default", {
                   month: "long",
                   year: "numeric",
@@ -257,40 +195,46 @@ const CalendarView = ({ nextReservations }) => {
         </Select>
       </Box>
 
-      <Box sx={{ overflowX: "auto", whiteSpace: "nowrap" }}>
+      <Box
+        sx={{
+          backgroundColor: "#fff",
+          display: "inline-block", // ✅ Esto permite que el contenido se mida según su ancho real
+          minWidth: `${daysInMonth.length * 52 + 120}px`, // ✅ Esto fuerza el ancho necesario para que no se comprima
+        }}
+      >
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: "4px",
-            border: "1px solid #ccc",
-            backgroundColor: "#f9f9f9",
-            overflowX: "auto",
-            height: "100vh",
-            width: "100%",
-            overflowY: "auto",
+            backgroundColor: "#fff",
+            height: "80vh",
+            justifyContent: "space-between",
           }}
         >
-          {/* Encabezado con días del mes */}
+          {/* Fila encabezado */}
           <Box
             sx={{
               display: "flex",
               position: "sticky",
               top: 0,
-              backgroundColor: "#f9f9f9",
+              backgroundColor: "#fff",
               zIndex: 1,
             }}
           >
             <Box
               sx={{
+                width: "120px",
                 minWidth: "120px",
                 textAlign: "center",
                 fontWeight: "bold",
+                color: "#565254",
+                borderRight: "1px solid #ccc",
+                alignContent: "center",
               }}
             >
-              Habitación
+              Fecha x Habitacion
             </Box>
-            {daysInMonth.map((day, index) => (
+            {daysInMonth.map((day) => (
               <Box
                 key={day.toISOString()}
                 sx={{
@@ -299,39 +243,49 @@ const CalendarView = ({ nextReservations }) => {
                   height: "41px",
                   textAlign: "center",
                   fontWeight: "bold",
-                  borderBottom: "1px solid #ccc",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               >
-                <Typography variant="caption" sx={{ fontSize: "10px" }}>
+                <Typography
+                  variant="caption"
+                  sx={{ fontSize: "10px", color: "#565254" }}
+                >
                   {day
                     .toLocaleDateString("es-ES", { weekday: "short" })
                     .charAt(0)
                     .toUpperCase()}
                 </Typography>
-                <Typography variant="body2" sx={{ fontSize: "12px" }}>
+                <Typography
+                  variant="body2"
+                  sx={{ fontSize: "12px", color: "#565254" }}
+                >
                   {day.getDate()}
                 </Typography>
               </Box>
             ))}
           </Box>
-          {/* Filas de habitaciones */}
           {Object.keys(groupedReservations).map((room) => (
-            <Box key={room} sx={{ display: "flex", alignItems: "center" }}>
+            <Box
+              key={room}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
               <Box
                 sx={{
                   minWidth: "120px",
                   textAlign: "center",
                   fontWeight: "bold",
-                  color: "#2E8B57",
+                  color: "#903AF2",
                 }}
               >
                 {room}
               </Box>
-              {daysInMonth.map((day, index) => {
+              {daysInMonth.map((day) => {
                 const utcDay = new Date(
                   Date.UTC(day.getFullYear(), day.getMonth(), day.getDate())
                 );
@@ -366,49 +320,64 @@ const CalendarView = ({ nextReservations }) => {
 
                 let backgroundColor;
                 let statusText = "";
+                let statusLabel = "";
+
+                // Entrada y salida el mismo día → mitad naranja, mitad violeta
                 if (isCheckInAndCheckOut) {
                   backgroundColor =
-                    "linear-gradient(90deg, #FF6347 50%, #2E8B57 50%)";
+                    "linear-gradient(90deg, #F9B27D 50%, #903AF2 50%)";
                   statusText =
-                    dayReservations.length > 0
-                      ? `${dayReservations[0]["fullName"].substring(0, 12)}`
-                      : "";
-                } else if (isOverlapping) {
-                  backgroundColor = "#FFD700";
-                  statusText = "Sobreventa";
+                    dayReservations[0]?.fullName?.substring(0, 10) || "";
+                  statusLabel = "Check-in / Check-out";
+
+                  // Entrada → degradado de blanco a violeta
                 } else if (isCheckIn) {
-                  backgroundColor = "#2E8B57";
+                  backgroundColor =
+                    "linear-gradient(90deg, #F9B27D 50%, #903AF2 50%)";
+
                   statusText =
-                    dayReservations.length > 0
-                      ? `${dayReservations[0]["fullName"].substring(0, 12)}`
-                      : "";
+                    dayReservations[0]?.fullName?.substring(0, 10) || "";
+                  statusLabel = "Check-in";
+
+                  // Salida → degradado de violeta a blanco (se esfuma)
                 } else if (isCheckOut) {
-                  backgroundColor = "#FF6347";
-                  statusText = "";
+                  backgroundColor =
+                    "linear-gradient(to right, #903AF2, #FFFFFF)";
+                  statusLabel = "Check-out";
+
+                  // Entrada nueva el mismo día de otra salida → violeta a naranja
+                } else if (dayReservations.length > 1) {
+                  backgroundColor =
+                    "linear-gradient(to right, #903AF2, #F9B27D)";
+                  statusText = "Cruzado";
+                  statusLabel = "Doble flujo";
+
+                  // Alojado completo → violeta puro
                 } else if (dayReservations.length > 0) {
-                  backgroundColor = "#87CEFA";
+                  backgroundColor = "#903AF2";
                   statusText =
-                    dayReservations.length > 0 &&
-                    dayReservations[0].rooms?.length > 0
-                      ? `${dayReservations[0].rooms[0].room.substring(0, 12)}`
-                      : "";
+                    dayReservations[0]?.rooms?.[0]?.room?.substring(0, 12) ||
+                    "";
+                  statusLabel = "Alojado";
+
+                  // Vacío → fondo con patrón o degradado muy claro
                 } else {
-                  backgroundColor = "#A9A9A9";
+                  backgroundColor =
+                    "linear-gradient(to bottom, #ffffff,rgb(232, 232, 232))";
+                  statusLabel = "";
                 }
 
                 return (
                   <Paper
                     key={utcDay.toISOString()}
                     sx={{
-                      minWidth: "50px",
-                      maxWidth: "50px",
+                      width: "52px", // usa el mismo ancho fijo
                       height: "40px",
                       background: backgroundColor,
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                      borderRadius: "2px",
-                      border: "1px solid #ccc",
+                      borderRadius: "2vh",
                       boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
                       cursor:
                         dayReservations.length > 0 ? "pointer" : "default",
@@ -422,7 +391,7 @@ const CalendarView = ({ nextReservations }) => {
                       handleOpenReservation(dayReservations, utcDay)
                     }
                   >
-                    <Typography variant="caption" sx={{ color: "#fff" }}>
+                    <Typography variant="caption" sx={{ color: "#ECECEC" }}>
                       {statusText}
                     </Typography>
                   </Paper>
@@ -439,602 +408,445 @@ const CalendarView = ({ nextReservations }) => {
           onClose={() => setModalOpen(false)}
           sx={{
             display: "flex",
-            alignItems: "center",
+            alignItems: "flex-start",
             justifyContent: "center",
+            overflow: "auto",
+            p: 2,
           }}
         >
           <Box
             sx={{
-              width: "90%",
-              maxWidth: "600px",
-              bgcolor: "#fff",
-              borderRadius: "12px",
-              boxShadow: 24,
+              width: "100%",
+              maxWidth: "1100px",
+              bgcolor: "#ECECEC",
+              borderRadius: 3,
               p: 3,
-              maxHeight: "90vh",
-              overflowY: "auto",
+              boxShadow: 24,
             }}
           >
-            {/* 📌 Número de la Habitación en Grande y Centrado */}
             <Typography
-              variant="h3"
-              sx={{
-                textAlign: "center",
-                fontWeight: "bold",
-                color: "#1976d2",
-                marginBottom: "16px",
-              }}
+              variant="h4"
+              fontWeight="bold"
+              color="#903AF2"
+              textAlign="center"
+              mb={3}
             >
-              Habitacion:{" "} 
+              Habitación:{" "}
               {selectedReservation?.reservations?.[0]?.rooms?.[0]?.room ||
                 "No Disponible"}
             </Typography>
 
-            {/* 📌 Listado de Reservas */}
-            <Grid container spacing={2}>
+            <Grid container spacing={3}>
               {selectedReservation.reservations.map((reservation, index) => {
                 const isExpanded = expandedReservation === reservation;
+                const faltaPagar = reservation.amount - reservation.seña;
 
                 return (
                   <Grid item xs={12} key={index}>
-                    <Box
-                      onClick={() => handleExpandReservation(reservation)}
+                    <Card
                       sx={{
-                        cursor: "pointer",
-                        padding: "12px",
-                        borderRadius: "8px",
-                        backgroundColor: "#f0f0f0",
-                        "&:hover": { backgroundColor: "#e0e0e0" },
-                        transition: "0.3s",
+                        backgroundColor: "#fff",
+                        borderRadius: 2,
+                        p: 2,
+                        boxShadow: isExpanded ? 6 : 1,
                       }}
+                      onClick={() => handleExpandReservation(reservation)}
                     >
-                      <Typography variant="body1">
-                        <strong>Huésped:</strong> {reservation["fullName"]}
+                      <Typography variant="subtitle1">
+                        <strong>Huésped:</strong> {reservation.fullName}
                       </Typography>
                       <Typography variant="body2">
                         <strong>Ingreso:</strong>{" "}
-                        {reservation["startDate"].slice(0, 10)}
+                        {reservation.startDate.slice(0, 10)}
                       </Typography>
                       <Typography variant="body2">
                         <strong>Salida:</strong>{" "}
-                        {reservation["endDate"].slice(0, 10)}
+                        {reservation.endDate.slice(0, 10)}
                       </Typography>
+                      <Typography variant="body2">
+                        <strong>Estado:</strong>{" "}
+                        {reservation.estado || "Pendiente"}
+                      </Typography>
+
                       {isExpanded && (
-                        <Box
-                          sx={{
-                            marginTop: "8px",
-                            padding: "12px",
-                            border: "1px solid #ccc",
-                            borderRadius: "8px",
-                            backgroundColor: "#fafafa",
-                          }}
-                        >
-                          <Typography variant="body2">
-                            <strong>Origen:</strong>{" "}
-                            {reservation["ingresoX"] || "No especificado"}
-                          </Typography>
-                          <Typography variant="body2">
-                            <strong>Creada el:</strong>{" "}
-                            {new Date(
-                              reservation["createdAt"]
-                            ).toLocaleDateString()}
-                          </Typography>
-                          <Typography variant="body2">
-                            <strong>Estado:</strong>{" "}
-                            {reservation["estado"] || "Pendiente"}
-                          </Typography>
-                          <Typography variant="body2">
-                            <strong>Telefono:</strong>{" "}
-                            {reservation["numberphone"] || "none"}
-                          </Typography>
-                          <Box display="flex" justifyContent="space-between" alignItems="center">
-                           <Typography variant="body2">
-                             <strong>Habitación:</strong> {reservation.rooms[0]?.room || "none"}
-                           </Typography>
-                           <Button
-                            variant="contained"
-                            size="small"
-                            sx={{
-                              fontSize: "12px",
-                              color: "#000", // Texto blanco
-                              borderColor: "#FFFFFF", // Borde blanco
-                              "&:hover": { backgroundColor: "#E0E0E0", borderColor: "#FFFFFF" }, // Fondo gris claro al pasar el mouse
-                              ml: "auto",
-                            }}
-                            onClick={() => setModalOpenRoom(true)}
-                           >
-                              Cambiar Habitación
-                            </Button>
-                          </Box>
-
-                          <Divider sx={{ marginY: "8px" }} />
-                          {/* Fechas de ingreso y salida con botones de modificación */}
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 1,
-                            }}
-                          >
-                            <Typography variant="body2">
-                              <strong>Fecha de Ingreso:</strong>{" "}
-                              {reservation["startDate"].slice(0, 10)}
-                            </Typography>
-                          </Box>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 1,
-                            }}
-                          >
-
-                            <Typography variant="body2">
-                              <strong>Fecha de Salida:</strong> {reservation["endDate"].slice(0, 10)}
-                            </Typography>
-                            <Button
-                              size="small"
-                              variant="contained"
-                              sx={{
-                                fontSize: "12px",
-                                color: "#000", // Texto blanco
-                                borderColor: "#FFFFFF", // Borde blanco
-                                "&:hover": { backgroundColor: "#E0E0E0", borderColor: "#FFFFFF" }, // Fondo gris claro al pasar el mouse
-                                ml: "auto",
-                              }}
-                              onClick={() => handleOpenEditModal(expandedReservation.idbeds)}
-                            >
-                                Modificar fechas
-                            </Button>
-                          </Box>
-
-                          
-
-                          <Divider sx={{ marginY: "8px" }} />
-                          {/* Información de pagos con diferencia de saldo */}
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 1,
-                            }}
-                          >
-                            <Typography variant="body2">
-                              <strong>Precio Total:</strong> $
-                              {reservation["amount"]}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              sx={{ fontWeight: "bold", color: "red" }}
-                            >
-                              (Falta pagar: $
-                              {reservation["amount"] - reservation["seña"]})
-                            </Typography>
-                            <Button
-                              size="small"
-                              variant="outlined"
-                              color="success"
-                              onClick={() => setModalOpen2(true)}
-                            >
-                              Pago Manual
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="success"
-                              sx={{ marginTop: "10px", fontWeight: "bold" }}
-                              onClick={() =>
-                                handleGenerateLink(expandedReservation.idbeds)
-                              }
-                            >
-                              QR / LINK
-                            </Button>
-                          </Box>
-                          <Typography variant="body2">
-                            <strong>Seña Pagada:</strong> ${reservation["seña"]}
-                          </Typography>
-                          <Typography variant="body2">
-                            <strong>Impuestos Web:</strong> $
-                            {reservation["impu"]}
-                          </Typography>
-                          <Divider sx={{ marginY: "8px" }} />
-                          {/* ID de la reserva */}
-                          <Typography
-                            variant="body2"
-                            sx={{ fontSize: "10px", color: "#666" }}
-                          >
-                            <strong>ID de Reserva:</strong>{" "}
-                            {reservation["reservationId"]}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ fontSize: "10px", color: "#666" }}
-                          >
-                            <strong>ID Beds:</strong> {reservation["idbeds"]}
-                          </Typography>
-                          <Divider sx={{ marginY: "8px" }} />
-                          {/* Botón de eliminar reserva */}
-                          <Button
-                            sx={{
-                              margin: "1vh",
-                              backgroundColor: "red",
-                              color: "white",
-                              "&:hover": { backgroundColor: "darkred" },
-                            }}
-                            variant="contained"
-                            onClick={() =>
-                              handleOpenDeleteModal(expandedReservation.idbeds)
-                            } // 📌 Obtiene el `idbeds`
-                          >
-                            Eliminar Reserva
-                          </Button>
-                          {/* MODAL PARA QR Y LINK DE PAGO */}
-                          <Modal
-                            open={modalOpenRoom}
-                            onClose={() => setModalOpenRoom(false)}
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                width: "400px",
-                                padding: "20px",
-                                backgroundColor: "#fff",
-                                borderRadius: "8px",
-                                boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "16px",
-                              }}
-                            >
-                              <Typography variant="h6" gutterBottom>
-                                Cambiar Habitación
+                        <>
+                          <Divider sx={{ my: 2 }} />
+                          <Grid container spacing={2}>
+                            <Grid item xs={12} md={6}>
+                              <Typography variant="body2">
+                                <strong>Origen:</strong>{" "}
+                                {reservation.ingresoX || "No especificado"}
                               </Typography>
-                              <FormControl fullWidth>
-                                <InputLabel>Seleccione Habitación</InputLabel>
-                                <Select
-                                  value={selectedRoom}
-                                  onChange={(e) =>
-                                    setSelectedRoom(e.target.value)
-                                  }
-                                >
-                                  {[
-                                    7, 9, 10, 12, 14, 15, 16, 18, 19, 20, 21,
-                                    22,
-                                  ].map((room) => (
-                                    <MenuItem key={room} value={room}>
-                                      {room}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              </FormControl>
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleUpdateRoomName}
-                              >
-                                Guardar
-                              </Button>
-                              <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={() => setModalOpenRoom(false)}
-                              >
-                                Cerrar
-                              </Button>
-                            </Box>
-                          </Modal>
-                          {/* MODAL PARA QR Y LINK DE PAGO */}
-                          <Modal
-                            open={modalOpen3}
-                            onClose={() => setModalOpen3(false)}
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                width: "400px",
-                                padding: "20px",
-                                backgroundColor: "#fff",
-                                borderRadius: "8px",
-                                textAlign: "center",
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                              }}
-                            >
-                              <Typography variant="h6" gutterBottom>
-                                Link de Pago Generado
+                              <Typography variant="body2">
+                                <strong>Creada el:</strong>{" "}
+                                {new Date(
+                                  reservation.createdAt
+                                ).toLocaleDateString()}
+                              </Typography>
+                              <Typography variant="body2">
+                                <strong>Teléfono:</strong>{" "}
+                                {reservation.numberphone || "N/A"}
+                              </Typography>
+                              <Typography variant="body2">
+                                <strong>Habitación:</strong>{" "}
+                                {reservation.rooms[0]?.room || "N/A"}
                               </Typography>
 
-                              {/* QR Code generado con el enlace */}
-                              {generatedLink && (
-                                <QRCodeCanvas
-                                  value={generatedLink}
-                                  size={200}
-                                />
-                              )}
-
-                              {/* Campo de texto con el enlace */}
-                              <TextField
-                                value={generatedLink}
-                                fullWidth
-                                InputProps={{ readOnly: true }}
-                                sx={{ marginTop: "10px" }}
-                              />
-
-                              {/* Botón para copiar el enlace */}
                               <Button
-                                variant="contained"
-                                color={copied ? "success" : "primary"}
-                                sx={{ marginTop: "10px" }}
-                                onClick={handleCopyLink}
-                              >
-                                {copied ? "Copiado ✅" : "Copiar Enlace"}
-                              </Button>
-
-                              {/* Botón para ir a la página de pago */}
-                              <Button
-                                variant="contained"
-                                color="secondary"
-                                sx={{ marginTop: "10px" }}
-                                onClick={() =>
-                                  window.open(generatedLink, "_blank")
-                                }
-                              >
-                                Ir a la Página de Pago
-                              </Button>
-
-                              {/* Botón para cerrar el modal */}
-                              <Button
-                                variant="contained"
-                                color="secondary"
-                                sx={{ marginTop: "10px" }}
-                                onClick={() => setModalOpen3(false)}
-                              >
-                                Cerrar
-                              </Button>
-                            </Box>
-                          </Modal>
-                          {/* MODAL PARA PAGO MANUAL */}
-                          <Modal
-                            open={modalOpen2}
-                            onClose={() => setModalOpen2(false)}
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                width: "400px",
-                                padding: "20px",
-                                backgroundColor: "#fff",
-                                borderRadius: "8px",
-                                boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "16px",
-                              }}
-                            >
-                              <Typography variant="h6" gutterBottom>
-                                Cargar Pago
-                              </Typography>
-                              {/* Campo para ingresar el monto */}
-                              <TextField
-                                label="Monto"
-                                type="number"
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
-                                fullWidth
-                              />
-                              {/* Selector para método de pago */}
-                              <FormControl fullWidth>
-                                <InputLabel>Método de Pago</InputLabel>
-                                <Select
-                                  value={paymentMethod}
-                                  onChange={(e) =>
-                                    setPaymentMethod(e.target.value)
-                                  }
-                                >
-                                  <MenuItem value="transferencia">
-                                    Transferencia
-                                  </MenuItem>
-                                  <MenuItem value="efectivo">Efectivo</MenuItem>
-                                </Select>
-                              </FormControl>
-                              {/* Selector para elegir empleado */}
-                              <FormControl fullWidth>
-                                <InputLabel>Empleado</InputLabel>
-                                <Select
-                                  value={employee}
-                                  onChange={(e) => setEmployee(e.target.value)}
-                                >
-                                  <MenuItem value="Gian">Gian</MenuItem>
-                                  <MenuItem value="Vale">Vale</MenuItem>
-                                  <MenuItem value="AirBnB">AirBnB</MenuItem>
-                                </Select>
-                              </FormControl>
-                              {/* Botón para enviar */}
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleChargePayment}
-                              >
-                                Guardar
-                              </Button>
-                              ;{/* Botón para cerrar */}
-                              <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={() => setModalOpen2(false)}
-                              >
-                                Cerrar
-                              </Button>
-                            </Box>
-                          </Modal>
-                          {/* MODAL PARA EDITAR FECHAS Y MONTO */}
-                          <Modal
-                            open={isEditModalOpen}
-                            onClose={handleCloseEditModal}
-                          >
-                            <Box
-                              sx={{
-                                position: "absolute",
-                                top: "50%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                maxWidth: "80vh",
-                                backgroundColor: "#fff",
-                                boxShadow: 24,
-                                p: 4,
-                                borderRadius: 2,
-                              }}
-                            >
-                              <Typography variant="h6">
-                                Modificar Reserva
-                              </Typography>
-                              <TextField
-                                label="Fecha de Ingreso"
-                                type="date"
-                                fullWidth
-                                margin="normal"
-                                value={newStartDate}
-                                onChange={(e) =>
-                                  setNewStartDate(e.target.value)
-                                }
-                                InputLabelProps={{ shrink: true }}
-                              />
-                              <TextField
-                                label="Fecha de Salida"
-                                type="date"
-                                fullWidth
-                                margin="normal"
-                                value={newEndDate}
-                                onChange={(e) => setNewEndDate(e.target.value)}
-                                InputLabelProps={{ shrink: true }}
-                              />
-                              <TextField
-                                label="Monto Total"
-                                type="number"
-                                fullWidth
-                                margin="normal"
-                                value={newAmount}
-                                onChange={(e) => setNewAmount(e.target.value)}
-                              />
-                              <Box
+                                size="small"
+                                variant="outlined"
+                                onClick={() => setModalOpenRoom(true)}
                                 sx={{
-                                  display: "flex",
-                                  justifyContent: "space-between",
-                                  marginTop: 2,
+                                  mt: 2,
+                                  fontWeight: "bold",
+                                  color: "#903AF2",
+                                  borderColor: "#903AF2",
                                 }}
                               >
-                                <Button
-                                  variant="contained"
-                                  onClick={handleCloseEditModal}
-                                >
-                                  Cancelar
-                                </Button>
-                                <Button
-                                  variant="contained"
-                                  color="primary"
-                                  onClick={handleUpdateReservation}
-                                >
-                                  Guardar
-                                </Button>
-                              </Box>
-                            </Box>
-                          </Modal>
-                          {/* MODAL DE CONFIRMACIÓN DE ELIMINACIÓN */}
-                          <Modal
-                            open={isDeleteModalOpen}
-                            onClose={handleCloseDeleteModal}
-                          >
-                            <Box
-                              sx={{
-                                position: "absolute",
-                                top: "50%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                width: 300,
-                                backgroundColor: "whitesmoke",
-                                boxShadow: 24,
-                                p: 4,
-                                borderRadius: 2,
-                                textAlign: "center",
-                              }}
-                            >
-                              <Typography
-                                variant="h6"
-                                sx={{ marginBottom: "10px" }}
-                              >
-                                ¿Eliminar esta reserva?
+                                Cambiar Habitación
+                              </Button>
+                            </Grid>
+
+                            <Grid item xs={12} md={6}>
+                              <Typography variant="body2">
+                                <strong>Ingreso:</strong>{" "}
+                                {reservation.startDate.slice(0, 10)}
                               </Typography>
-                              <Typography
-                                variant="body2"
-                                sx={{ color: "gray", marginBottom: "20px" }}
-                              >
-                                Esta acción no se puede deshacer.
+                              <Typography variant="body2">
+                                <strong>Salida:</strong>{" "}
+                                {reservation.endDate.slice(0, 10)}
                               </Typography>
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                sx={{
+                                  mt: 2,
+                                  fontWeight: "bold",
+                                  color: "#EE964B",
+                                  borderColor: "#EE964B",
+                                }}
+                                onClick={() =>
+                                  handleOpenEditModal(reservation.idbeds)
+                                }
+                              >
+                                Modificar Fechas
+                              </Button>
+                            </Grid>
+
+                            <Grid item xs={12}>
+                              <Divider sx={{ my: 2 }} />
+                              <Typography variant="body2">
+                                <strong>Precio Total:</strong> $
+                                {reservation.amount}{" "}
+                                <span
+                                  style={{ color: "red", fontWeight: "bold" }}
+                                >
+                                  (Falta pagar: ${faltaPagar})
+                                </span>
+                              </Typography>
+                              <Typography variant="body2">
+                                <strong>Seña Pagada:</strong> $
+                                {reservation.seña}
+                              </Typography>
+                              <Typography variant="body2">
+                                <strong>Impuestos Web:</strong> $
+                                {reservation.impu}
+                              </Typography>
+
                               <Box
                                 sx={{
                                   display: "flex",
-                                  justifyContent: "space-between",
+                                  flexWrap: "wrap",
+                                  gap: 2,
+                                  mt: 2,
                                 }}
                               >
                                 <Button
                                   variant="outlined"
-                                  color="secondary"
-                                  onClick={handleCloseDeleteModal}
+                                  color="success"
+                                  size="small"
+                                  onClick={() => setModalOpen2(true)}
                                 >
-                                  Cancelar
+                                  Pago Manual
                                 </Button>
                                 <Button
                                   variant="contained"
-                                  color="error"
-                                  onClick={handleDelete} // 📌 Llama a la función de eliminación
+                                  color="success"
+                                  size="small"
+                                  onClick={() =>
+                                    handleGenerateLink(reservation.idbeds)
+                                  }
                                 >
-                                  Confirmar
+                                  QR / LINK
                                 </Button>
                               </Box>
-                            </Box>
-                          </Modal>
-                        </Box>
+                            </Grid>
+
+                            <Grid
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-evenly",
+                                alignItems: "center",
+                                justifyItems: "center",
+                              }}
+                              item
+                              xs={12}
+                            >
+                              <Divider sx={{ my: 2 }} />
+                              <Typography
+                                variant="caption"
+                                color="textSecondary"
+                              >
+                                <strong>ID Reserva:</strong>{" "}
+                                {reservation.reservationId} |{" "}
+                                <strong>ID Beds:</strong> {reservation.idbeds}
+                              </Typography>
+
+                              <Button
+                                variant="contained"
+                                color="error"
+                                size="small"
+                                onClick={() =>
+                                  handleOpenDeleteModal(reservation.idbeds)
+                                }
+                              >
+                                Eliminar Reserva
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </>
                       )}
-                    </Box>
-
-                    {/* 📌 Información Detallada al hacer Clic */}
-
-                    <Divider sx={{ marginY: "8px" }} />
+                    </Card>
                   </Grid>
                 );
               })}
             </Grid>
 
-            {/* 📌 Botón para Cerrar */}
             <Button
-              onClick={() => setModalOpen(false)}
-              variant="contained"
               fullWidth
+              variant="contained"
               sx={{
-                marginTop: "20px",
-                padding: "10px",
+                marginTop: "30px",
+                padding: "12px",
                 fontWeight: "bold",
-                backgroundColor: "#1976d2",
-                "&:hover": { backgroundColor: "#1565c0" },
+                backgroundColor: "#903AF2",
+                "&:hover": { backgroundColor: "#6e2bc1" },
               }}
+              onClick={() => setModalOpen(false)}
             >
               Cerrar
             </Button>
           </Box>
         </Modal>
       )}
+
+      <Modal
+        open={modalOpenRoom}
+        onClose={() => setModalOpenRoom(false)}
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      >
+        <Box
+          sx={{
+            width: "400px",
+            padding: "20px",
+            backgroundColor: "#fff",
+            borderRadius: "8px",
+            boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}
+        >
+          <Typography variant="h6">Cambiar Habitación</Typography>
+          <FormControl fullWidth>
+            <InputLabel>Seleccione Habitación</InputLabel>
+            <Select
+              value={selectedRoom}
+              onChange={(e) => setSelectedRoom(e.target.value)}
+            >
+              {[7, 9, 10, 12, 14, 15, 16, 18, 19, 20, 21, 22].map((room) => (
+                <MenuItem key={room} value={room}>
+                  {room}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleUpdateRoomName}
+          >
+            Guardar
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => setModalOpenRoom(false)}
+          >
+            Cerrar
+          </Button>
+        </Box>
+      </Modal>
+      <Modal
+        open={modalOpen3}
+        onClose={() => setModalOpen3(false)}
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      >
+        <Box
+          sx={{
+            width: "400px",
+            padding: "20px",
+            backgroundColor: "#fff",
+            borderRadius: "8px",
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h6">Link de Pago Generado</Typography>
+
+          {generatedLink && <QRCodeCanvas value={generatedLink} size={200} />}
+
+          <TextField
+            value={generatedLink}
+            fullWidth
+            InputProps={{ readOnly: true }}
+            sx={{ marginTop: "10px" }}
+          />
+
+          <Button
+            variant="contained"
+            color={copied ? "success" : "primary"}
+            sx={{ marginTop: "10px" }}
+            onClick={handleCopyLink}
+          >
+            {copied ? "Copiado ✅" : "Copiar Enlace"}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{ marginTop: "10px" }}
+            onClick={() => window.open(generatedLink, "_blank")}
+          >
+            Ir a la Página de Pago
+          </Button>
+
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{ marginTop: "10px" }}
+            onClick={() => setModalOpen3(false)}
+          >
+            Cerrar
+          </Button>
+        </Box>
+      </Modal>
+      <Modal
+        open={modalOpen2}
+        onClose={() => setModalOpen2(false)}
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      >
+        <Box
+          sx={{
+            width: "400px",
+            padding: "20px",
+            backgroundColor: "#fff",
+            borderRadius: "8px",
+            boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}
+        >
+          <Typography variant="h6">Cargar Pago</Typography>
+
+          <TextField
+            label="Monto"
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            fullWidth
+          />
+
+          <FormControl fullWidth>
+            <InputLabel>Método de Pago</InputLabel>
+            <Select
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            >
+              <MenuItem value="transferencia">Transferencia</MenuItem>
+              <MenuItem value="efectivo">Efectivo</MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth>
+            <InputLabel>Empleado</InputLabel>
+            <Select
+              value={employee}
+              onChange={(e) => setEmployee(e.target.value)}
+            >
+              <MenuItem value="Gian">Gian</MenuItem>
+              <MenuItem value="Vale">Vale</MenuItem>
+              <MenuItem value="AirBnB">AirBnB</MenuItem>
+            </Select>
+          </FormControl>
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleChargePayment}
+          >
+            Guardar
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => setModalOpen2(false)}
+          >
+            Cerrar
+          </Button>
+        </Box>
+      </Modal>
+      <Modal open={isDeleteModalOpen} onClose={handleCloseDeleteModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 300,
+            backgroundColor: "whitesmoke",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="h6" sx={{ marginBottom: "10px" }}>
+            ¿Eliminar esta reserva?
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{ color: "gray", marginBottom: "20px" }}
+          >
+            Esta acción no se puede deshacer.
+          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleCloseDeleteModal}
+            >
+              Cancelar
+            </Button>
+            <Button variant="contained" color="error" onClick={handleDelete}>
+              Confirmar
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 };

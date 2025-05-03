@@ -13,28 +13,79 @@ import {
   ListItem,
   ListItemText,
   Avatar,
+  Grid,
+  Paper,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import Logout from "@mui/icons-material/Logout";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import ShoppingCart from "@mui/icons-material/ShoppingCart";
+import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
 import { useAuth } from "../context/AuthContext";
 import "../styles/navbar.css";
-import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
+import Grow from "@mui/material/Grow"; // Asegúrate de importar esto
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import DeviceHubIcon from "@mui/icons-material/DeviceHub";
+import LanguageIcon from "@mui/icons-material/Language";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import AutoAwesomeMotionIcon from "@mui/icons-material/AutoAwesomeMotion";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+const featureItems = [
+  {
+    label: "Motor de Reservas",
+    route: "/booking-engine",
+    icon: <EventAvailableIcon sx={{ color: "#903AF2", mr: 1 }} />,
+  },
+  {
+    label: "Gestor de Canales",
+    route: "/channel-manager",
+    icon: <DeviceHubIcon sx={{ color: "#903AF2", mr: 1 }} />,
+  },
+  {
+    label: "Sitio Web",
+    route: "/website-builder",
+    icon: <LanguageIcon sx={{ color: "#903AF2", mr: 1 }} />,
+  },
+  {
+    label: "Pagos Online",
+    route: "/payments",
+    icon: <AttachMoneyIcon sx={{ color: "#903AF2", mr: 1 }} />,
+  },
+  {
+    label: "Panel Administrativo",
+    route: "/admin-panel",
+    icon: <DashboardCustomizeIcon sx={{ color: "#903AF2", mr: 1 }} />,
+  },
+  {
+    label: "Automatización",
+    route: "/automation",
+    icon: <AutoAwesomeMotionIcon sx={{ color: "#903AF2", mr: 1 }} />,
+  },
+];
 function Navbar({ setSearchbarVisible, setSelectedCategory }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  let megaMenuTimeout = null;
   let firstChar = "";
-
   if (isAuthenticated && user?.username && user?.lastname) {
     firstChar =
       user.username.charAt(0).toUpperCase() +
       user.lastname.charAt(0).toUpperCase();
   }
+  const handleMegaMenuEnter = () => {
+    clearTimeout(megaMenuTimeout);
+    setMegaMenuOpen(true);
+  };
 
+  const handleMegaMenuLeave = () => {
+    megaMenuTimeout = setTimeout(() => {
+      setMegaMenuOpen(false);
+    }, 200); // 200ms de tolerancia
+  };
   const handleDrawerToggle = () => setDrawerOpen(!drawerOpen);
   const handleLogout = () => logout();
   const handleAccountClick = () =>
@@ -67,39 +118,25 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
         {isAuthenticated ? (
           <List>
             <ListItem button onClick={() => navigate("/dashboard")}>
+              {" "}
               <ListItemIcon>
                 <DashboardCustomizeIcon sx={{ color: "#903AF2" }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Dashboard"
-                primaryTypographyProps={{
-                  sx: { fontFamily: "'Merriweather Sans', sans-serif" },
-                }}
-              />
+              </ListItemIcon>{" "}
+              <ListItemText primary="Dashboard" />
             </ListItem>
-
             <ListItem button onClick={() => navigate("/pay")}>
+              {" "}
               <ListItemIcon>
                 <ShoppingCart sx={{ color: "#903AF2" }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Mis Compras"
-                primaryTypographyProps={{
-                  sx: { fontFamily: "'Merriweather Sans', sans-serif" },
-                }}
-              />
+              </ListItemIcon>{" "}
+              <ListItemText primary="Mis Compras" />
             </ListItem>
-
             <ListItem button onClick={handleLogout}>
+              {" "}
               <ListItemIcon>
                 <Logout sx={{ color: "#903AF2" }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Cerrar Sesión"
-                primaryTypographyProps={{
-                  sx: { fontFamily: "'Merriweather Sans', sans-serif" },
-                }}
-              />
+              </ListItemIcon>{" "}
+              <ListItemText primary="Cerrar Sesión" />
             </ListItem>
           </List>
         ) : (
@@ -108,57 +145,27 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
               <ListItemText
                 primary="Iniciar Sesión"
                 sx={{ color: "#903AF2" }}
-                primaryTypographyProps={{
-                  sx: { fontFamily: "'Merriweather Sans', sans-serif" },
-                }}
               />
             </ListItem>
             <ListItem button onClick={() => navigate("/register")}>
-              <ListItemText
-                primary="Crear Cuenta"
-                sx={{ color: "#903AF2" }}
-                primaryTypographyProps={{
-                  sx: { fontFamily: "'Merriweather Sans', sans-serif" },
-                }}
-              />
+              <ListItemText primary="Crear Cuenta" sx={{ color: "#903AF2" }} />
             </ListItem>
           </List>
         )}
 
         <Divider sx={{ my: 2 }} />
-
-        <Typography
-          variant="subtitle2"
-          fontWeight="bold"
-          gutterBottom
-          sx={{ fontFamily: "'Red Hat Display', sans-serif" }}
-        >
+        <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
           Accesos rápidos
         </Typography>
         <List>
           <ListItem button onClick={() => navigate("/precios")}>
-            <ListItemText
-              primary="Planes y precios"
-              primaryTypographyProps={{
-                sx: { fontFamily: "'Merriweather Sans', sans-serif" },
-              }}
-            />
+            <ListItemText primary="Planes y precios" />
           </ListItem>
           <ListItem button onClick={() => navigate("/beneficios")}>
-            <ListItemText
-              primary="Beneficios"
-              primaryTypographyProps={{
-                sx: { fontFamily: "'Merriweather Sans', sans-serif" },
-              }}
-            />
+            <ListItemText primary="Beneficios" />
           </ListItem>
           <ListItem button onClick={() => navigate("/comenzar")}>
-            <ListItemText
-              primary="Cómo empezar"
-              primaryTypographyProps={{
-                sx: { fontFamily: "'Merriweather Sans', sans-serif" },
-              }}
-            />
+            <ListItemText primary="Cómo empezar" />
           </ListItem>
         </List>
       </Box>
@@ -170,7 +177,7 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
       <AppBar position="static" elevation={0} sx={{ bgcolor: "#ffffff" }}>
         <Toolbar
           sx={{
-            px: { xs: 2, sm: 4, lg: 0 }, // sacamos el px interno en lg
+            px: { xs: 2, sm: 4, lg: 0 },
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -179,13 +186,12 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
           <Box
             sx={{
               width: "100%",
-              px: { sm: 10, lg: 30, xl: 40 }, // padding horizontal como container
+              px: { sm: 10, lg: 30, xl: 40 },
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
             }}
           >
-            {/* Logo y menú hamburguesa para XS */}
             <Box display={{ xs: "flex", lg: "none" }} alignItems="center">
               <IconButton
                 onClick={handleDrawerToggle}
@@ -197,21 +203,16 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
                 <Typography
                   variant="h5"
                   fontWeight="bold"
-                  sx={{
-                    color: "#903AF2",
-                    ml: 2,
-                    fontFamily: "'Red Hat Display', sans-serif",
-                    fontWeight: 700,
-                  }}
+                  sx={{ color: "#903AF2", ml: 2 }}
                 >
                   Ubika
                 </Typography>
               </Link>
             </Box>
 
-            {/* Logo + navegación grande para LG y superior */}
+            {/* Menú para escritorio */}
             <Box
-              display={{ xs: "none", sm: "none", lg: "flex" }}
+              display={{ xs: "none", lg: "flex" }}
               alignItems="center"
               gap={4}
             >
@@ -219,90 +220,104 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
                 <Typography
                   variant="h5"
                   fontWeight="bold"
-                  sx={{
-                    color: "#903AF2",
-                    fontFamily: "'Segoe UI', sans-serif",
-                  }}
+                  sx={{ color: "#903AF2" }}
                 >
                   Ubika
                 </Typography>
               </Link>
-              {isAuthenticated ? (
-                <>
-                  <Button
-                    onClick={() => navigate("/dashboard")}
-                    sx={{ color: "#2B2B2B" }}
-                  >
-                    Dashboard
-                  </Button>
-                  <Button
-                    onClick={() => navigate("/precios")}
+
+              <Box
+                onMouseEnter={handleMegaMenuEnter}
+                onMouseLeave={handleMegaMenuLeave}
+                sx={{ position: "relative" }}
+              >
+                <Button
+                  endIcon={<ExpandMoreIcon />}
+                  sx={{
+                    color: "#903AF2",
+                    fontWeight: "bold",
+                    fontFamily: "'Red Hat Display', sans-serif",
+                    fontSize: "1rem",
+                    textTransform: "none",
+                    "&:hover": { color: "#702AC2" },
+                  }}
+                >
+                  Plataforma
+                </Button>
+
+                <Grow
+                  in={megaMenuOpen}
+                  timeout={200}
+                  style={{ transformOrigin: "top center" }}
+                >
+                  <Paper
+                    elevation={4}
                     sx={{
-                      color: "#903AF2",
-                      fontWeight: "bold",
-                      "&:hover": { color: "#702ac2" },
+                      position: "absolute",
+                      top: "100%",
+                      left: 0,
+                      zIndex: 20,
+                      width: 680,
+                      px: 4,
+                      py: 3,
+                      mt: 1.5,
+                      display: "grid",
+                      gridTemplateColumns: "repeat(2, 1fr)",
+                      gap: 2,
+                      borderRadius: 3,
+                      backgroundColor: "#ffffff",
+                      boxShadow: "0px 4px 18px rgba(0, 0, 0, 0.1)",
                     }}
                   >
-                    Precios
-                  </Button>
-                  <Button
-                    onClick={() => navigate("/beneficios")}
-                    sx={{
-                      color: "#903AF2",
-                      fontWeight: "bold",
-                      "&:hover": { color: "#702ac2" },
-                    }}
-                  >
-                    Beneficios
-                  </Button>
-                  <Button
-                    onClick={() => navigate("/comenzar")}
-                    sx={{
-                      color: "#903AF2",
-                      fontWeight: "bold",
-                      "&:hover": { color: "#702ac2" },
-                    }}
-                  >
-                    Cómo empezar
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    onClick={() => navigate("/precios")}
-                    sx={{
-                      color: "#903AF2",
-                      fontWeight: "bold",
-                      "&:hover": { color: "#702ac2" },
-                    }}
-                  >
-                    Precios
-                  </Button>
-                  <Button
-                    onClick={() => navigate("/beneficios")}
-                    sx={{
-                      color: "#903AF2",
-                      fontWeight: "bold",
-                      "&:hover": { color: "#702ac2" },
-                    }}
-                  >
-                    Beneficios
-                  </Button>
-                  <Button
-                    onClick={() => navigate("/comenzar")}
-                    sx={{
-                      color: "#903AF2",
-                      fontWeight: "bold",
-                      "&:hover": { color: "#702ac2" },
-                    }}
-                  >
-                    Cómo empezar
-                  </Button>
-                </>
-              )}
+                    {featureItems.map(({ label, route, icon }) => (
+                      <Button
+                        key={route}
+                        onClick={() => {
+                          setMegaMenuOpen(false);
+                          navigate(route);
+                        }}
+                        fullWidth
+                        startIcon={icon}
+                        sx={{
+                          justifyContent: "flex-start",
+                          fontSize: "0.95rem",
+                          color: "#565254",
+                          textTransform: "none",
+                          fontFamily: "'Merriweather Sans', sans-serif",
+                          backgroundColor: "transparent",
+                          borderRadius: 2,
+                          "&:hover": {
+                            backgroundColor: "#f3f0fa",
+                            color: "#903AF2",
+                          },
+                        }}
+                      >
+                        {label}
+                      </Button>
+                    ))}
+                  </Paper>
+                </Grow>
+              </Box>
+              <Button
+                onClick={() => navigate("/precios")}
+                sx={{ color: "#903AF2", fontWeight: "bold" }}
+              >
+                Precios
+              </Button>
+              <Button
+                onClick={() => navigate("/beneficios")}
+                sx={{ color: "#903AF2", fontWeight: "bold" }}
+              >
+                Beneficios
+              </Button>
+              <Button
+                onClick={() => navigate("/comenzar")}
+                sx={{ color: "#903AF2", fontWeight: "bold" }}
+              >
+                Cómo empezar
+              </Button>
             </Box>
 
-            {/* Íconos derecha */}
             <Box display="flex" alignItems="center">
               {isAuthenticated ? (
                 <IconButton onClick={handleAccountClick} sx={{ mx: 1 }}>
@@ -322,12 +337,7 @@ function Navbar({ setSearchbarVisible, setSelectedCategory }) {
         variant="temporary"
         open={drawerOpen}
         onClose={handleDrawerToggle}
-        sx={{
-          "& .MuiDrawer-paper": {
-            boxSizing: "border-box",
-            width: 300,
-          },
-        }}
+        sx={{ "& .MuiDrawer-paper": { boxSizing: "border-box", width: 300 } }}
       >
         {drawer}
       </Drawer>

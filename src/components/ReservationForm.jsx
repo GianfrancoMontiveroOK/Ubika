@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Grid,
   TextField,
   Button,
   MenuItem,
@@ -12,145 +13,39 @@ import {
   Alert,
   CircularProgress,
   Box,
+  Checkbox,
+  FormControlLabel,
+  Modal,
 } from "@mui/material";
 import { ReservationFormAxios, getReservesHB } from "../api/reserves";
-import { useNavigate } from "react-router-dom";
-
-// Función para generar un ID de reserva aleatorio
-const generateReservationId = () => {
-  return "RES-" + Math.random().toString(36).substr(2, 9).toUpperCase();
-};
 
 const ReservationForm = () => {
   const [arrival, setArrival] = useState("");
   const [departure, setDeparture] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
-  const [employeeName, setEmployeeName] = useState("");
+  const [employeeName, setEmployeeName] = useState("Vale");
   const [customerName, setCustomerName] = useState("");
-  const [numberOfGuests, setNumberOfGuests] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [numberOfGuests, setNumberOfGuests] = useState(2);
+  const [paymentMethod, setPaymentMethod] = useState("efectivo");
   const [señado, setSeñado] = useState(0);
-  const [dniOrRut, setDniOrRut] = useState(""); // Nuevo estado para DNI o RUT
-  const [phoneNumber, setPhoneNumber] = useState(""); // Nuevo estado para Teléfono
+  const [dniOrRut, setDniOrRut] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [origin, setOrigin] = useState("whatsapp");
+  const [paymentStatus, setPaymentStatus] = useState("pendiente");
   const [specialRequests, setSpecialRequests] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(true);
+  const [availableRooms, setAvailableRooms] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [reservationId, setReservationId] = useState(""); // Si necesitas manejar un ID de reserva
-  const [availableRooms, setAvailableRooms] = useState([]);
-  const [alertOpen, setAlertOpen] = useState(false); // Estado para el Snackbar
-  const employees = ["Vale", "Gian"];
-  const customers = ["12345678", "98765432", "11223344"];
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false); // Estado para el indicador de carga
+  const [loading, setLoading] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [generatedLink, setGeneratedLink] = useState("");
+  const [copied, setCopied] = useState(false);
 
-
-  const validateDates = (arrivalDate, departureDate) => {
-    if (!arrivalDate || !departureDate) {
-      setErrorMessage("Las fechas de llegada y salida son obligatorias.");
-      return false;
-    }
-    if (new Date(arrivalDate) >= new Date(departureDate)) {
-      setErrorMessage(
-        "La fecha de llegada debe ser anterior a la fecha de salida."
-      );
-      return false;
-    }
-    return true;
-  };
-  const handleCloseAlert = () => setAlertOpen(false); // Cierra la alerta
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setLoading(true); // Activa el indicador de carga
-
-    const requiredFields = [
-      employeeName,
-      customerName,
-      numberOfGuests,
-      roomNumber,
-      dniOrRut, // DNI o RUT es obligatorio
-      totalAmount,
-      arrival,
-      departure,
-    ];
-
-    if (requiredFields.some((field) => !field)) {
-      setErrorMessage("Todos los campos obligatorios deben completarse.");
-      setSuccessMessage(""); // Limpia el mensaje de éxito, si existe
-      setLoading(false); // Detiene el indicador de carga
-      return;
-    }
-
-    const reservationData = {
-      reservationId,
-      employeeName,
-      paymentMethod,
-      customerName,
-      numberOfGuests,
-      roomNumber,
-      dniOrRut,
-      phoneNumber, // Teléfono opcional
-      totalAmount,
-      arrival,
-      departure,
-      specialRequests,
-      señado,
-    };
-
-    try {
-      const response = await ReservationFormAxios(reservationData);
-
-      // Verifica si la respuesta es válida
-      if (response.status === 200) {
-        setSuccessMessage("Reserva procesada exitosamente.");
-        setErrorMessage(""); // Limpia el mensaje de error
-        setAlertOpen(true); // Muestra la alerta
-        setTimeout(() => window.location.reload(), 2000); // Recarga la página después de 2s
-      } else {
-        const data = await response.json(); // Suponiendo que es JSON
-        setErrorMessage(data.message || "Error al procesar la reserva.");
-        setSuccessMessage("");
-      }
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("Error al procesar la reserva. Intente nuevamente.");
-      setSuccessMessage("");
-    } finally {
-      setLoading(false); // Detiene el indicador de carga
-    }
-  };
-
-  const fetchAvailableRooms = async (arrivalDate, departureDate) => {
-    console.log("fechAvailableRooms", arrivalDate, departureDate);
-    if (!validateDates(arrivalDate, departureDate)) return;
-    try {
-      const response = await getReservesHB({
-        startDate: arrivalDate,
-        endDate: departureDate,
-      });
-      if (response.status === 200) {
-        // Definir la función para filtrar habitaciones disponibles
-        const filterAvailableRooms = (rooms) =>
-          rooms.filter((room) => room.available > 0);
-
-        // Filtrar habitaciones y extraer sus números
-        const availableRoomNumbers = filterAvailableRooms(response.data).map(
-          (room) => room.room
-        );
-        // 1️⃣ Agregar el número 10 y el símbolo #
-        availableRoomNumbers.push(10, 7);
-        setAvailableRooms(availableRoomNumbers);
-      } else {
-        setErrorMessage("No se pudieron obtener las habitaciones disponibles.");
-      }
-    } catch (error) {
-      setErrorMessage(
-        "Error al verificar la disponibilidad de las habitaciones."
-      );
-    }
-  };
-
+  const employees = ["Vale", "Gian", "Automático"];
   const roomPrices = {
     7: 17000,
     9: 40000,
@@ -167,199 +62,407 @@ const ReservationForm = () => {
   };
 
   const handleRoomChange = (e) => {
-    const selectedRoom = e.target.value;
-    setRoomNumber(selectedRoom);
-
-    // Actualizar el precio automáticamente según la habitación seleccionada
-    const price = roomPrices[selectedRoom] || "";
-    setTotalAmount(price);
+    const selected = e.target.value;
+    setRoomNumber(selected);
+    setTotalAmount(roomPrices[selected] || "");
   };
-  useEffect(() => {
-    if (arrival && departure) {
-      fetchAvailableRooms(arrival, departure);
+  const handleGenerateLink = (bedsidselect) => {
+    const baseUrl = `${window.location.origin}/#/completepay`;
+    const params = new URLSearchParams({ bedsid: bedsidselect });
+    const fullUrl = `${baseUrl}?${params.toString()}`;
+    setGeneratedLink(fullUrl);
+    setModalOpen(true);
+    setCopied(false);
+  };
+
+  const fetchAvailableRooms = async (start, end) => {
+    if (!start || !end || new Date(start) >= new Date(end)) return;
+    try {
+      const res = await getReservesHB({ startDate: start, endDate: end });
+      if (res.status === 200) {
+        const disponibles = res.data
+          .filter((r) => r.available > 0)
+          .map((r) => r.room);
+        setAvailableRooms([...disponibles, 10, 7]);
+      }
+    } catch {
+      setErrorMessage("Error al obtener habitaciones disponibles.");
     }
+  };
+
+  useEffect(() => {
+    if (arrival && departure) fetchAvailableRooms(arrival, departure);
   }, [arrival, departure]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const required = [
+      employeeName,
+      customerName,
+      numberOfGuests,
+      roomNumber,
+      dniOrRut,
+      totalAmount,
+      arrival,
+      departure,
+    ];
+
+    if (required.some((f) => !f)) {
+      setErrorMessage("Completa los campos obligatorios.");
+      setLoading(false);
+      return;
+    }
+
+    const data = {
+      employeeName,
+      paymentMethod,
+      customerName,
+      numberOfGuests,
+      roomNumber,
+      dniOrRut,
+      phoneNumber,
+      email,
+      origin,
+      paymentStatus,
+      totalAmount,
+      arrival,
+      departure,
+      specialRequests,
+      señado,
+    };
+
+    try {
+      const res = await ReservationFormAxios(data);
+
+      if (res.status === 200 && res.data?.reservation?.idbeds) {
+        setSuccessMessage("Reserva registrada.");
+        setAlertOpen(true);
+        handleGenerateLink(res.data.reservation.idbeds); // ✅ usa correctamente el idbeds
+      } else {
+        setErrorMessage("Error: no se recibió un ID válido.");
+      }
+    } catch (err) {
+      console.error(err);
+      setErrorMessage("No se pudo guardar la reserva.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <Container sx={{ backgroundColor: "#fff" }} maxWidth="sm">
-      <Typography variant="h4" align="center" gutterBottom>
-        Formulario de Reserva Manual
+    <Container maxWidth="md" sx={{ bgcolor: "#fff", p: 3, borderRadius: 2 }}>
+      <Typography variant="h5" align="center" gutterBottom fontWeight="bold">
+        Reserva Manual
       </Typography>
-      {/* Snackbar para alertas */}
+
       <Snackbar
         open={alertOpen}
         autoHideDuration={4000}
-        onClose={handleCloseAlert}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        onClose={() => setAlertOpen(false)}
       >
-        <Alert
-          onClose={handleCloseAlert}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Alerta creada exitosamente!
-        </Alert>
+        <Alert severity="success">Reserva creada</Alert>
       </Snackbar>
+
       <form onSubmit={handleSubmit}>
-        {/* Fecha de llegada */}
-        <TextField
-          fullWidth
-          label="Fecha de Llegada"
-          type="date"
-          value={arrival}
-          onChange={(e) => setArrival(e.target.value)}
-          required
-          InputLabelProps={{ shrink: true }}
-          margin="normal"
-        />
+        <Grid container spacing={2}>
+          {/* Fecha Ingreso / Salida */}
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Ingreso"
+              type="date"
+              size="small"
+              margin="dense"
+              InputLabelProps={{ shrink: true }}
+              value={arrival}
+              onChange={(e) => setArrival(e.target.value)}
+              required
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Salida"
+              type="date"
+              size="small"
+              margin="dense"
+              InputLabelProps={{ shrink: true }}
+              value={departure}
+              onChange={(e) => setDeparture(e.target.value)}
+              required
+            />
+          </Grid>
 
-        {/* Fecha de salida */}
-        <TextField
-          fullWidth
-          label="Fecha de Salida"
-          type="date"
-          value={departure}
-          onChange={(e) => setDeparture(e.target.value)}
-          required
-          InputLabelProps={{ shrink: true }}
-          margin="normal"
-        />
+          {/* Habitación y Monto */}
+          <Grid item xs={6}>
+            <FormControl fullWidth size="small" margin="dense">
+              <InputLabel>Habitación</InputLabel>
+              <Select value={roomNumber} onChange={handleRoomChange} required>
+                {availableRooms.map((room) => (
+                  <MenuItem key={room} value={room}>
+                    {room}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Tarifa"
+              value={totalAmount}
+              onChange={(e) => setTotalAmount(e.target.value)}
+              size="small"
+              margin="dense"
+              required
+            />
+          </Grid>
 
-        {/* Habitaciones disponibles */}
-        <FormControl fullWidth margin="normal">
-          <InputLabel>Número de Habitación</InputLabel>
-          <Select
-            value={roomNumber}
-            onChange={handleRoomChange}
-            label="Número de Habitación"
-            required
-          >
-            {availableRooms.length > 0 ? (
-              availableRooms.map((room) => (
-                <MenuItem key={room} value={room}>
-                  {room}
-                </MenuItem>
-              ))
-            ) : (
-              <MenuItem value="">No hay habitaciones disponibles</MenuItem>
-            )}
-          </Select>
-        </FormControl>
+          {/* Cliente y DNI */}
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Cliente"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              size="small"
+              margin="dense"
+              required
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="DNI o RUT"
+              value={dniOrRut}
+              onChange={(e) => setDniOrRut(e.target.value)}
+              size="small"
+              margin="dense"
+              required
+            />
+          </Grid>
 
-        {/* Monto total */}
-        <TextField
-          fullWidth
-          label="Tarifa de la Habitacion"
-          value={totalAmount}
-          onChange={(e) => setTotalAmount(e.target.value)} // Permite editar manualmente si es necesario
-          required
-          margin="normal"
-        />
+          {/* Teléfono / Email */}
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Teléfono"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              size="small"
+              margin="dense"
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              size="small"
+              margin="dense"
+            />
+          </Grid>
 
-        {/* Otros campos del formulario */}
-        <FormControl fullWidth margin="normal">
-          <InputLabel>Empleado</InputLabel>
-          <Select
-            value={employeeName}
-            onChange={(e) => setEmployeeName(e.target.value)}
-            label="Empleado"
-            required
-          >
-            {employees.map((employee) => (
-              <MenuItem key={employee} value={employee}>
-                {employee}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+          {/* Número de Personas y Empleado */}
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="N° Personas"
+              type="number"
+              value={numberOfGuests}
+              onChange={(e) => setNumberOfGuests(e.target.value)}
+              size="small"
+              margin="dense"
+              required
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth size="small" margin="dense">
+              <InputLabel>Empleado</InputLabel>
+              <Select
+                value={employeeName}
+                onChange={(e) => setEmployeeName(e.target.value)}
+                required
+              >
+                {employees.map((emp) => (
+                  <MenuItem key={emp} value={emp}>
+                    {emp}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
 
-        <TextField
-          fullWidth
-          label="Nombre del Cliente"
-          value={customerName}
-          onChange={(e) => setCustomerName(e.target.value)}
-          required
-          margin="normal"
-        />
+          {/* Origen y Método de Pago */}
+          <Grid item xs={6}>
+            <FormControl fullWidth size="small" margin="dense">
+              <InputLabel>Origen</InputLabel>
+              <Select
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value)}
+                required
+              >
+                <MenuItem value="web">Web</MenuItem>
+                <MenuItem value="booking">Booking</MenuItem>
+                <MenuItem value="whatsapp">WhatsApp</MenuItem>
+                <MenuItem value="presencial">Presencial</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth size="small" margin="dense">
+              <InputLabel>Método de Pago</InputLabel>
+              <Select
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                required
+              >
+                <MenuItem value="efectivo">Efectivo</MenuItem>
+                <MenuItem value="transferencia">Transferencia</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
 
-        <TextField
-          fullWidth
-          label="Número de personas"
-          type="number"
-          value={numberOfGuests}
-          onChange={(e) => setNumberOfGuests(e.target.value)}
-          min="1"
-          required
-          margin="normal"
-        />
+          {/* Estado de pago y señado */}
+          <Grid item xs={6}>
+            <FormControl fullWidth size="small" margin="dense">
+              <InputLabel>Estado del Pago</InputLabel>
+              <Select
+                value={paymentStatus}
+                onChange={(e) => setPaymentStatus(e.target.value)}
+                required
+              >
+                <MenuItem value="pendiente">Pendiente</MenuItem>
+                <MenuItem value="parcial">Parcial</MenuItem>
+                <MenuItem value="pagado">Pagado</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Seña"
+              value={señado}
+              onChange={(e) => setSeñado(e.target.value)}
+              size="small"
+              margin="dense"
+            />
+          </Grid>
 
-        <TextField
-          fullWidth
-          label="DNI o RUT"
-          value={dniOrRut}
-          onChange={(e) => setDniOrRut(e.target.value)}
-          required
-          margin="normal"
-        />
+          {/* Comentarios */}
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Solicitudes Especiales"
+              value={specialRequests}
+              onChange={(e) => setSpecialRequests(e.target.value)}
+              multiline
+              rows={2}
+              size="small"
+              margin="dense"
+            />
+          </Grid>
 
-        <TextField
-          fullWidth
-          label="Teléfono (Opcional)"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          margin="normal"
-        />
+          {/* Aceptación */}
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={acceptTerms}
+                  onChange={(e) => setAcceptTerms(e.target.checked)}
+                  required
+                />
+              }
+              label="Acepto los términos y condiciones"
+            />
+          </Grid>
 
-        <FormControl fullWidth margin="normal">
-          <InputLabel>Metodo de Pago</InputLabel>
-          <Select
-            value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-            label="Metodo de Pago"
-          >
-            <MenuItem value="efectivo">Efectivo</MenuItem>
-            <MenuItem value="transferencia">Transferencia</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField
-          fullWidth
-          label="Cantidad Abonado de forma Externa"
-          value={señado}
-          onChange={(e) => setSeñado(e.target.value)}
-          margin="normal"
-        />
-        {loading && (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100vw",
-              height: "100vh",
-              backgroundColor: "rgba(255, 255, 255, 0.7)", // Fondo semitransparente
-              zIndex: 9999, // Encima de otros elementos
-            }}
-          >
-            <CircularProgress />
-          </Box>
-        )}
-
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          sx={{ mt: 2 }}
-        >
-          Confirmar Reserva
-        </Button>
+          {/* Botón */}
+          <Grid item xs={12}>
+            <Button type="submit" variant="contained" fullWidth sx={{ mt: 1 }}>
+              Confirmar Reserva
+            </Button>
+          </Grid>
+        </Grid>
       </form>
 
+      {loading && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(255,255,255,0.7)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+        <Box
+          sx={{
+            bgcolor: "#fff",
+            p: 4,
+            borderRadius: 2,
+            maxWidth: 400,
+            mx: "auto",
+            mt: "15vh",
+            boxShadow: 24,
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="h6" gutterBottom color="success.main">
+            ¡Reserva confirmada!
+          </Typography>
+          <Typography variant="body1" mb={2}>
+            Escanea el QR o usa el enlace para pagar:
+          </Typography>
+
+          <TextField
+            value={generatedLink}
+            fullWidth
+            InputProps={{ readOnly: true }}
+            sx={{ mb: 2 }}
+          />
+
+          <Box sx={{ textAlign: "center", mb: 2 }}>
+            <img
+              src={`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
+                generatedLink
+              )}&size=200x200`}
+              alt="QR de pago"
+            />
+          </Box>
+
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={() => {
+              navigator.clipboard.writeText(generatedLink);
+              setCopied(true);
+            }}
+          >
+            {copied ? "¡Enlace copiado!" : "Copiar enlace"}
+          </Button>
+
+          <Button fullWidth sx={{ mt: 2 }} onClick={() => setModalOpen(false)}>
+            Cerrar
+          </Button>
+        </Box>
+      </Modal>
+
       {errorMessage && (
-        <Typography variant="body1" color="error" align="center" sx={{ mt: 2 }}>
+        <Typography color="error" align="center" sx={{ mt: 2 }}>
           {errorMessage}
         </Typography>
       )}
