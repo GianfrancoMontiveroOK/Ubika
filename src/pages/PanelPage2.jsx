@@ -37,6 +37,11 @@ import WeeklyView from "../components/WeklyView";
 import ReservationForm from "../components/ReservationForm";
 import ReservationHistory from "../components/ReservationHistory";
 import { QRCodeCanvas } from "qrcode.react";
+import {
+  deleteReserve,
+  updateReservation,
+  ChargePayment,
+} from "../api/reserves"; // ajusta el path si es necesario
 
 const drawerWidth = 240;
 
@@ -61,6 +66,9 @@ export default function PanelPage2Ubika({ data }) {
   const [newEndDate, setNewEndDate] = useState("");
   const [newAmount, setNewAmount] = useState(0);
   const [selectedBedId, setSelectedBedId] = useState(null);
+  const [modalOpenRoom, setModalOpenRoom] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState("");
+
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const handleGenerateLink = (bedsidselect) => {
     if (!bedsidselect) {
@@ -76,6 +84,9 @@ export default function PanelPage2Ubika({ data }) {
     setGeneratedLink(fullUrl);
     setModalOpen3(true);
     setCopied(false);
+  };
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
   };
 
   const handleCopyLink = () => {
@@ -347,6 +358,11 @@ export default function PanelPage2Ubika({ data }) {
             <Box sx={{ width: "100%", overflowX: "auto" }}>
               <Box sx={{ width: "max-content", maxWidth: "100%" }}>
                 <WeeklyView
+                  handleGenerateLink={handleGenerateLink}
+                  handleCopyLink={handleCopyLink}
+                  handleChargePayment={handleChargePayment}
+                  handleDelete={handleDelete}
+                  handleUpdateRoomName={handleUpdateRoomName}
                   nextReservations={data?.allReservations || []}
                   modalOpen={modalOpen}
                   setModalOpen={setModalOpen}
@@ -395,6 +411,69 @@ export default function PanelPage2Ubika({ data }) {
           {view === "finanzas" && <Box>Finanzas</Box>}
           {view === "billing" && <Box>Facturación</Box>}
         </Box>
+        <Modal open={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 350,
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              p: 4,
+              borderRadius: 2,
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+            }}
+          >
+            <Typography variant="h6" textAlign="center">
+              Editar Reserva
+            </Typography>
+
+            <TextField
+              label="Fecha de Entrada"
+              type="date"
+              value={newStartDate}
+              onChange={(e) => setNewStartDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+            />
+            <TextField
+              label="Fecha de Salida"
+              type="date"
+              value={newEndDate}
+              onChange={(e) => setNewEndDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+            />
+            <TextField
+              label="Nuevo Monto Total"
+              type="number"
+              value={newAmount}
+              onChange={(e) => setNewAmount(e.target.value)}
+              fullWidth
+            />
+
+            <Box display="flex" justifyContent="space-between">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleUpdateReservation}
+              >
+                Guardar Cambios
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={() => setIsEditModalOpen(false)}
+              >
+                Cancelar
+              </Button>
+            </Box>
+          </Box>
+        </Modal>
       </Box>
     </ThemeProvider>
   );

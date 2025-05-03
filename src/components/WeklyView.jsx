@@ -73,6 +73,11 @@ const CalendarView = ({
   setModalOpenRoom,
   selectedRoom,
   setSelectedRoom,
+  handleUpdateRoomName,
+  handleGenerateLink,
+  handleCopyLink,
+  handleChargePayment,
+  handleDelete,
 }) => {
   useEffect(() => {
     if (selectedReservation) {
