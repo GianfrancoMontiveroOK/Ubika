@@ -8,9 +8,28 @@ import {
   TextField,
   Button,
 } from "@mui/material";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import { Bar } from "react-chartjs-2";
 
-const FinanzasView = ({ reservations }) => {
+// 📌 Registrar los elementos necesarios
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const FinanzasDashboard = ({ reservations }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [filteredReservations, setFilteredReservations] =
@@ -173,4 +192,4 @@ const FinanzasView = ({ reservations }) => {
   );
 };
 
-export default FinanzasView;
+export default FinanzasDashboard;
