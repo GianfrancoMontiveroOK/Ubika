@@ -42,25 +42,9 @@ import {
   updateReservation,
   ChargePayment,
 } from "../api/reserves"; // ajusta el path si es necesario
-import FinanzasDashboard from "../components/FinanzasDashboard.jsx";
-import BillingDashboard from "../components/BillingDashboard.jsx";
-import RoomOccupancyDashboard from "../components/RoomOccupancyDashboard.jsx";
 
 const drawerWidth = 240;
-const roomSelectList = [
-  "7",
-  "9",
-  "10",
-  "12",
-  "14",
-  "15",
-  "16",
-  "18",
-  "19",
-  "20",
-  "21",
-  "22",
-]; // Lista dinámica de empleados
+
 export default function PanelPage2Ubika({ data }) {
   const [view, setView] = useState("reservas");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -84,12 +68,8 @@ export default function PanelPage2Ubika({ data }) {
   const [selectedBedId, setSelectedBedId] = useState(null);
   const [modalOpenRoom, setModalOpenRoom] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState("");
-  const [confirmOpen, setConfirmOpen] = useState(false); // Estado para abrir/cerrar e
-  const [confirmOpen4, setConfirmOpen4] = useState(false); // Estado para abrir/cerrar e
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const [loading, setLoading] = useState(true); // Estado para gestionar la carga
-  const [message, setMessage] = useState("");
 
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const handleGenerateLink = (bedsidselect) => {
     if (!bedsidselect) {
       console.error("Error: No se recibió un ID válido para la reserva.");
@@ -108,30 +88,7 @@ export default function PanelPage2Ubika({ data }) {
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
   };
-  // Abre el diálogo de confirmación
-  const handleConfirmOpen4 = (bedsid) => {
-    setSelectedBedId(bedsid); // Guarda el ID de la reserva
-    setConfirmOpen4(true);
-  };
-  const handleOpenModal2 = (idbeds) => {
-    setSelectedBedId(idbeds); // Almacena el idbeds seleccionado
-    setModalOpen2(true);
-  };
-  const handleOpenModal3 = (idbeds) => {
-    setSelectedBedId(idbeds); // Almacena el idbeds seleccionado
-    setModalOpen3(true);
-  };
 
-  // Abre el diálogo de confirmación
-  const handleConfirmOpen = (bedsid) => {
-    setSelectedBedId(bedsid); // Guarda el ID de la reserva
-    setConfirmOpen(true);
-  };
-  // Cierra el diálogo de confirmación
-  const handleConfirmClose4 = () => {
-    setConfirmOpen4(false);
-    setSelectedBedId(null);
-  };
   const handleCopyLink = () => {
     navigator.clipboard
       .writeText(generatedLink)
@@ -269,7 +226,7 @@ export default function PanelPage2Ubika({ data }) {
             icon: <AddCircleOutlineIcon />,
             view: "new",
           },
-          { text: "Hoy", icon: <TodayIcon />, view: "" },
+          { text: "Hoy", icon: <TodayIcon />, view: "hoy" },
           { text: "Reservas", icon: <CalendarTodayIcon />, view: "reservas" },
           { text: "Historial", icon: <HistoryIcon />, view: "history" },
           { text: "Finanzas", icon: <AttachMoneyIcon />, view: "finanzas" },
@@ -445,31 +402,14 @@ export default function PanelPage2Ubika({ data }) {
                   setModalOpenRoom={setModalOpenRoom}
                   selectedRoom={selectedRoom}
                   setSelectedRoom={setSelectedRoom}
+                  nextReservations={data?.allReservations || []}
                 />
               </Box>
             </Box>
           )}
           {view === "history" && <ReservationHistory data={data} />}
-          {view === "finanzas" && (
-            <FinanzasDashboard reservations={data?.allReservations || []} />
-          )}
-
-          {view === "billing" && (
-            <BillingDashboard invoices={data?.invoices || []} />
-          )}
-          {view === "" && (
-            <RoomOccupancyDashboard
-              activeReservations={data.activeReservations}
-              roomSelectList={roomSelectList}
-              handleConfirmOpen4={handleConfirmOpen4}
-              handleOpenModal3={handleOpenModal3}
-              handleGenerateLink={handleGenerateLink}
-              handleOpenModal2={handleOpenModal2}
-              handleConfirmOpen={handleConfirmOpen}
-              loading={loading}
-              message={message}
-            />
-          )}
+          {view === "finanzas" && <Box>Finanzas</Box>}
+          {view === "billing" && <Box>Facturación</Box>}
         </Box>
         <Modal open={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
           <Box
