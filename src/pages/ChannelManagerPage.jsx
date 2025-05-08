@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import HeroChannel1 from "../components/HeroChannel1";
 import HeroChannel2 from "../components/HeroChannel2";
 import HeroChannel3 from "../components/HeroChannel3";
+import HeroChannel4 from "../components/HeroChannel4";
 import Footer from "../components/Footer";
 
 function ChannelManagerPage() {
@@ -68,6 +69,26 @@ function ChannelManagerPage() {
         }}
       >
         <HeroChannel3 />
+      </Box>
+      {/* Sección 3 - HeroChannel3 */}
+      <Box
+        sx={{
+          scrollSnapAlign: "start",
+          height: {
+            xs: "auto",
+            sm: "auto",
+            md: "100vh",
+            lg: "100vh",
+            xl: "100vh",
+          },
+          minHeight: "100vh",
+          overflow: "hidden",
+          position: "relative",
+          zIndex: 1,
+          mt: 0, // 👈 Evita saltos
+        }}
+      >
+        <HeroChannel4 />
       </Box>
       <Box
         sx={{

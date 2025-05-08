@@ -35,7 +35,7 @@ function Hero3Contact() {
       sx={{
         scrollSnapAlign: "start",
         background: "linear-gradient(180deg, #d2c2f2, #903AF2 50%)",
-        height: "100%",
+        height: "100vh",
         color: "white",
         py: 8,
         px: 3,
@@ -143,7 +143,7 @@ function Hero3Contact() {
               variant="h5"
               fontWeight="bold"
               gutterBottom
-              sx={{ color: "#ffffff", mb: 2 }}
+              sx={{ color: "#ffffff", mb: 2 }}  
             >
               Nuestras Oficinas
             </Typography>
