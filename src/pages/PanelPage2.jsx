@@ -453,10 +453,7 @@ export default function PanelPage2Ubika({ data }) {
           {view === "finanzas" && (
             <FinanzasDashboard reservations={data?.allReservations || []} />
           )}
-
-          {view === "billing" && (
-            <BillingDashboard invoices={data?.invoices || []} />
-          )}
+          {view === "billing" && <BillingDashboard data={data} />}
           {view === "" && (
             <RoomOccupancyDashboard
               activeReservations={data.activeReservations}

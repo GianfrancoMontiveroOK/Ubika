@@ -9,6 +9,10 @@ import {
   Container,
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import PublicIcon from "@mui/icons-material/Public";
+import FlashOnIcon from "@mui/icons-material/FlashOn";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import { Link as RouterLink } from "react-router-dom";
 
 const features = [
@@ -21,8 +25,8 @@ const features = [
       { text: "Motor de Reservas", href: "/booking-engine" },
       { text: "Panel Administrativo", href: "/admin-panel" },
     ],
-    iconColor: "#903AF2",
-    icon: "📅",
+    icon: <CalendarTodayIcon sx={{ color: "#903AF2" }} />,
+    solapaColor: "#EE964B", // naranja
   },
   {
     title: "Conseguí más huéspedes",
@@ -33,8 +37,8 @@ const features = [
       { text: "Metabuscadores", href: "/metasearch" },
       { text: "Marketing Digital", href: "/marketing" },
     ],
-    iconColor: "#EE964B",
-    icon: "🌎",
+    icon: <PublicIcon sx={{ color: "#903AF2" }} />,
+    solapaColor: "#EAF7CF", // verde claro
   },
   {
     title: "Automatizá tareas clave",
@@ -45,8 +49,8 @@ const features = [
       { text: "Pagos Online", href: "/payments" },
       { text: "Atención al Cliente", href: "/customer-support" },
     ],
-    iconColor: "#EAF7CF",
-    icon: "⚡",
+    icon: <FlashOnIcon sx={{ color: "#903AF2" }} />,
+    solapaColor: "#D1C4E9", // lila claro opcional
   },
   {
     title: "Escalá tu alojamiento",
@@ -57,8 +61,8 @@ const features = [
       { text: "Expansión de Canales", href: "/channel-expansion" },
       { text: "Soporte Personalizado", href: "/support" },
     ],
-    iconColor: "#565254",
-    icon: "🚀",
+    icon: <RocketLaunchIcon sx={{ color: "#903AF2" }} />,
+    solapaColor: "#B2DFDB", // verde agua opcional
   },
 ];
 
@@ -93,82 +97,104 @@ export default function FeaturesSection() {
         <Grid container spacing={{ xs: 8, md: 10 }} justifyContent="center">
           {features.map((feature, index) => (
             <Grid item xs={12} sm={6} md={6} key={index}>
-              <Card
-                elevation={4}
+              <Box
                 sx={{
-                  p: { xs: 3, md: 4 },
-                  borderRadius: 4,
-                  backgroundColor: "#f9f9f9",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
+                  position: "relative",
                   transition: "transform 0.3s ease",
                   "&:hover": { transform: "translateY(-8px)" },
                 }}
               >
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Box
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      backgroundColor: feature.iconColor,
-                      borderRadius: 2,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      mb: 4,
-                    }}
-                  >
-                    <Typography variant="h5" sx={{ color: "#fff" }}>
+                {/* Solapa decorativa */}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 8,
+                    backgroundColor: feature.solapaColor,
+                    borderTopLeftRadius: 16,
+                    borderBottomLeftRadius: 16,
+                  }}
+                />
+
+                <Card
+                  elevation={4}
+                  sx={{
+                    pl: 3,
+                    pr: { xs: 3, md: 4 },
+                    py: { xs: 3, md: 4 },
+                    ml: 1,
+                    borderTopRightRadius: 16,
+                    borderBottomRightRadius: 16,
+                    backgroundColor: "#f9f9f9",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Box
+                      sx={{
+                        width: 48,
+                        height: 48,
+                        backgroundColor: "#F3E8FD", // violeta claro de fondo
+                        borderRadius: 2,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        mb: 2,
+                      }}
+                    >
                       {feature.icon}
-                    </Typography>
-                  </Box>
-
-                  <Typography
-                    variant="h6"
-                    fontWeight="bold"
-                    sx={{
-                      color: "#903AF2",
-                      mb: 2,
-                      fontFamily: "'Red Hat Display', sans-serif",
-                    }}
-                  >
-                    {feature.title}
-                  </Typography>
-
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: "#565254",
-                      mb: 3,
-                      fontFamily: "'Merriweather Sans', sans-serif",
-                    }}
-                  >
-                    {feature.description}
-                  </Typography>
-
-                  {feature.links.map((link, i) => (
-                    <Box key={i} mb={1}>
-                      <Link
-                        component={RouterLink}
-                        to={link.href.replace("#", "")} // importante para sacar el "#" y que funcione con HashRouter
-                        underline="none"
-                        sx={{
-                          color: "#565254",
-                          fontWeight: "medium",
-                          display: "flex",
-                          alignItems: "center",
-                          "&:hover": { color: "#903AF2" },
-                        }}
-                      >
-                        {link.text}
-                        <ArrowForwardIcon sx={{ fontSize: 20, ml: 1 }} />
-                      </Link>
                     </Box>
-                  ))}
-                </CardContent>
-              </Card>
+
+                    <Typography
+                      variant="h6"
+                      fontWeight="bold"
+                      sx={{
+                        color: "#903AF2",
+                        mb: 2,
+                        fontFamily: "'Red Hat Display', sans-serif",
+                      }}
+                    >
+                      {feature.title}
+                    </Typography>
+
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#565254",
+                        mb: 3,
+                        fontFamily: "'Merriweather Sans', sans-serif",
+                      }}
+                    >
+                      {feature.description}
+                    </Typography>
+
+                    {feature.links.map((link, i) => (
+                      <Box key={i} mb={1}>
+                        <Link
+                          component={RouterLink}
+                          to={link.href.replace("#", "")}
+                          underline="none"
+                          sx={{
+                            color: "#565254",
+                            fontWeight: "medium",
+                            display: "flex",
+                            alignItems: "center",
+                            "&:hover": { color: "#903AF2" },
+                          }}
+                        >
+                          {link.text}
+                          <ArrowForwardIcon sx={{ fontSize: 20, ml: 1 }} />
+                        </Link>
+                      </Box>
+                    ))}
+                  </CardContent>
+                </Card>
+              </Box>
             </Grid>
           ))}
         </Grid>

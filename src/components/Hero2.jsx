@@ -44,7 +44,7 @@ const Hero2 = () => {
         position: "relative", // Necesario para ubicar la cuña
         display: "flex",
         flexDirection: "column",
-        alignItems: "top",
+        justifyContent: "center",
         bgcolor: "#fff",
         px: { xs: 3, lg: 15 },
         overflow: "hidden", // Por si la cuña se sale del borde
@@ -55,16 +55,14 @@ const Hero2 = () => {
         fontWeight="bold"
         sx={{
           color: "#903AF2",
-          mb: 4,
-          mt: 5,
           textAlign: "center",
           fontFamily: "'Red Hat Display', sans-serif",
-          display: {
-            xs: "block",
-            sm: "block",
-            md: "block",
-            lg: "block",
-            xl: "block",
+          fontSize: {
+            xs: "2rem",
+            sm: "2rem",
+            md: "2rem",
+            lg: "2rem",
+            xl: "3rem",
           },
         }}
       >

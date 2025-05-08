@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Typography, Modal, Backdrop, Fade } from "@mui/material";
 import { initMercadoPago, Payment } from "@mercadopago/sdk-react";
-
+import addPaymentMethod from "../api/dashboard";
 const AddPaymentMethod = () => {
   const [open, setOpen] = useState(false);
 

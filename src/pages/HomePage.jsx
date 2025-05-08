@@ -63,7 +63,7 @@ function HomePage({
       <Box
         sx={(theme) => ({
           scrollSnapAlign: "start",
-          height: "80vh",
+          height: "100vh",
           [theme.customBreakpoints.mobileShort]: {
             height: "100vh", // iPhone SE u otros móviles bajos
           },

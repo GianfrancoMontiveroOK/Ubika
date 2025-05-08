@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -11,66 +11,92 @@ import {
   Paper,
   Button,
   Modal,
-  TextField,
-  Grid,
+  Chip,
+  Divider,
+  Backdrop,
+  Fade,
 } from "@mui/material";
-import AddPaymentMethod from "./AddPaymentMethod";
+import { initMercadoPago, Payment } from "@mercadopago/sdk-react";
+import { addPaymentMethod } from "../api/dashboard"; // tu función de llamada al backend
 
-const BillingDashboard = ({ invoices = [] }) => {
+const BillingDashboard = ({ data }) => {
   const [openModal, setOpenModal] = useState(false);
-  const [cardData, setCardData] = useState({
-    name: "",
-    number: "",
-    expiry: "",
-    cvv: "",
-  });
 
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+  const {
+    invoices = [],
+    totalServicio = 0,
+    totalMulta = 0,
+  } = data?.billing || {};
+  const ingresosGian = Number(data?.ingresosGian || 0);
+  const totalDeuda = totalServicio + totalMulta + ingresosGian;
 
-  const handleDownload = (invoiceId) => {
-    alert(`Descargando factura ${invoiceId}`);
-  };
+  useEffect(() => {
+    initMercadoPago("APP_USR-afee0343-72e0-4f42-acef-392fbd1ebcfb", {
+      locale: "es-CL",
+    });
+  }, []);
 
-  const handleSendEmail = (invoiceId) => {
-    alert(`Enviando factura ${invoiceId} por correo`);
-  };
-
-  const handleCardChange = (e) => {
-    const { name, value } = e.target;
-    setCardData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleCardSubmit = () => {
-    // Aquí iría la integración real con pasarela de pago
-    console.log("Tarjeta cargada:", cardData);
-    alert("Método de pago agregado exitosamente.");
-    handleCloseModal();
+  const handlePaymentSubmit = async (formData) => {
+    try {
+      const res = await addPaymentMethod(formData);
+      console.log("Respuesta del backend:", res);
+      alert("Método de pago guardado correctamente");
+    } catch (err) {
+      console.error("Error al guardar método de pago:", err);
+      alert("Ocurrió un error al guardar el método de pago.");
+    } finally {
+      setOpenModal(false);
+    }
   };
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h5" fontWeight="bold" gutterBottom>
-        Facturación
+      <Typography variant="h4" fontWeight="bold" gutterBottom color="#903AF2">
+        Panel de Facturación
       </Typography>
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h5" gutterBottom fontWeight="bold">
-          Facturación
+
+      <Box
+        sx={{
+          p: 2,
+          backgroundColor: "#f7f7f7",
+          borderRadius: 2,
+          mb: 3,
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+        }}
+      >
+        <Typography variant="subtitle2" color="text.secondary">
+          Deuda actual: <strong>${totalDeuda.toLocaleString("es-CL")}</strong>
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Deuda por servicio: ${totalServicio.toLocaleString("es-CL")}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Multas por suspensión: ${totalMulta.toLocaleString("es-CL")}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Comisión Ubika (5%): ${ingresosGian.toLocaleString("es-CL")}
         </Typography>
 
-        <AddPaymentMethod />
-        {/* ...resto del dashboard */}
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => setOpenModal(true)}
+          sx={{ mt: 1, alignSelf: "flex-end" }}
+        >
+          Agregar método de pago
+        </Button>
       </Box>
 
-      <TableContainer component={Paper}>
+      <Divider sx={{ mb: 2 }} />
+
+      <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
         <Table>
           <TableHead sx={{ backgroundColor: "#903AF2" }}>
             <TableRow>
               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
                 Fecha
-              </TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
-                Cliente
               </TableCell>
               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
                 Monto
@@ -84,104 +110,119 @@ const BillingDashboard = ({ invoices = [] }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {invoices.map((invoice) => (
-              <TableRow key={invoice.id}>
-                <TableCell>{invoice.date}</TableCell>
-                <TableCell>{invoice.client}</TableCell>
-                <TableCell>${invoice.amount.toLocaleString()}</TableCell>
-                <TableCell>{invoice.status}</TableCell>
-                <TableCell>
-                  <Button
-                    color="primary"
-                    onClick={() => handleDownload(invoice.id)}
-                  >
-                    Descargar
-                  </Button>
-                  <Button
-                    color="secondary"
-                    onClick={() => handleSendEmail(invoice.id)}
-                  >
-                    Enviar Email
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-            {invoices.length === 0 && (
+            {invoices.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} align="center">
+                <TableCell colSpan={4} align="center">
                   No hay facturas registradas.
                 </TableCell>
               </TableRow>
+            ) : (
+              invoices
+                .slice()
+                .reverse()
+                .map((invoice) => {
+                  const today = new Date();
+                  const dueDate = new Date(invoice.dueDate);
+                  const daysLate =
+                    invoice.status === "PENDIENTE"
+                      ? Math.floor((today - dueDate) / (1000 * 60 * 60 * 24))
+                      : null;
+                  const formattedDate = new Date(invoice.date).toLocaleDateString("es-CL");
+
+                  return (
+                    <TableRow key={invoice._id}>
+                      <TableCell>{formattedDate}</TableCell>
+                      <TableCell>
+                        ${invoice.amount.toLocaleString("es-CL")}
+                        <Typography
+                          variant="caption"
+                          display="block"
+                          color="text.secondary"
+                        >
+                          {invoice.status === "PENDIENTE" && daysLate > 0
+                            ? `Hace ${daysLate} día(s)`
+                            : invoice.status === "PAGADO"
+                            ? "Pagado a tiempo"
+                            : "Sin información"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          label={invoice.status}
+                          color={invoice.status === "PAGADO" ? "success" : "warning"}
+                          size="small"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          size="small"
+                          variant="text"
+                          color="primary"
+                          onClick={() => alert(`Descargando factura ${invoice._id}`)}
+                        >
+                          Descargar
+                        </Button>
+                        <Button
+                          size="small"
+                          variant="text"
+                          color="secondary"
+                          onClick={() => alert(`Enviando factura ${invoice._id}`)}
+                        >
+                          Enviar Email
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
             )}
           </TableBody>
         </Table>
       </TableContainer>
 
-      {/* Modal para agregar tarjeta */}
-      <Modal open={openModal} onClose={handleCloseModal}>
-        <Box
-          sx={{
-            backgroundColor: "white",
-            borderRadius: 2,
-            p: 4,
-            width: 400,
-            mx: "auto",
-            mt: "10vh",
-            boxShadow: 24,
-          }}
-        >
-          <Typography variant="h6" mb={2}>
-            Agregar Tarjeta de Débito o Crédito
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                label="Nombre del Titular"
-                fullWidth
-                name="name"
-                value={cardData.name}
-                onChange={handleCardChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Número de Tarjeta"
-                fullWidth
-                name="number"
-                value={cardData.number}
-                onChange={handleCardChange}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="Vencimiento (MM/AA)"
-                fullWidth
-                name="expiry"
-                value={cardData.expiry}
-                onChange={handleCardChange}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="CVV"
-                fullWidth
-                name="cvv"
-                value={cardData.cvv}
-                onChange={handleCardChange}
-              />
-            </Grid>
-          </Grid>
-          <Box mt={3} display="flex" justifyContent="space-between">
-            <Button onClick={handleCloseModal}>Cancelar</Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleCardSubmit}
-            >
-              Agregar
-            </Button>
+      {/* Modal con Brick de Mercado Pago */}
+      <Modal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{ backdrop: { timeout: 500 } }}
+      >
+        <Fade in={openModal}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              borderRadius: 2,
+              boxShadow: 24,
+              p: 4,
+            }}
+          >
+            <Typography variant="h6" mb={2}>
+              Ingresar datos de la tarjeta
+            </Typography>
+            <Payment
+              initialization={{ amount: totalDeuda || 1000 }}
+              customization={{
+                paymentMethods: {
+                  creditCard: "all",
+                  debitCard: "all",
+                },
+                visual: {
+                  style: { theme: "default" },
+                },
+              }}
+              onSubmit={handlePaymentSubmit}
+              onReady={() => console.log("Brick cargado")}
+              onError={(error) =>
+                console.error("Error en Brick de Mercado Pago", error)
+              }
+            />
           </Box>
-        </Box>
+        </Fade>
       </Modal>
     </Box>
   );
