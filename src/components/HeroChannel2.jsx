@@ -9,8 +9,9 @@ function FeaturesUbika() {
   return (
     <Box
       sx={{
-        background: "linear-gradient(to bottom, #ffffff 0%, #903AF2 150%)",
-        color: "#222",
+        background: "linear-gradient(0deg, #d2c2f2, #903AF2 50%)",
+
+        color: "#fff",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -27,7 +28,7 @@ function FeaturesUbika() {
           mb={8}
           sx={{
             fontFamily: "'Red Hat Display', sans-serif",
-            color: "#903AF2",
+            color: "#fff",
           }}
         >
           Ubika simplifica la gestión de tu alojamiento
@@ -89,7 +90,7 @@ function FeaturesUbika() {
                     fontWeight="bold"
                     sx={{
                       fontFamily: "'Red Hat Display', sans-serif",
-                      color: "#565254",
+                      color: "#fff",
                       fontSize: { xs: "1.1rem", md: "1.25rem" },
                     }}
                   >
@@ -100,7 +101,7 @@ function FeaturesUbika() {
                     mt={1}
                     sx={{
                       fontFamily: "'Merriweather Sans', sans-serif",
-                      color: "#565254",
+                      color: "#fff",
                     }}
                   >
                     {feature.description}
