@@ -17,7 +17,7 @@ function FeaturesUbika() {
         height: "100%", // ✅ Ocupa el alto completo de la vista
         py: 5,
       }}
-    >
+    >7
       <Container maxWidth="lg">
         {/* Título */}
         <Typography

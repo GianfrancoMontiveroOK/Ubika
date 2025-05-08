@@ -41,7 +41,6 @@ function ChannelManagerPage() {
             xl: "100vh",
           },
           minHeight: "100vh",
-          overflow: "auto",
           position: "relative",
           zIndex: 1,
           mt: 0, // 👈 Evita saltos
