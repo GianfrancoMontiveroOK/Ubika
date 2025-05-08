@@ -6,25 +6,38 @@ function HeroUbika() {
   return (
     <Box
       sx={{
-        background: "linear-gradient(to bottom, #ffffff 0%, #903AF2 150%)",
-        color: "#222",
+        background: "linear-gradient(180deg, #d2c2f2, #903AF2 50%)",
+        color: "#fff",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        height: "100%",
+        height: "100vh",
       }}
     >
       <Container maxWidth="lg">
-        <Grid container spacing={4} alignItems="center">
+        <Grid
+          container
+          spacing={4}
+          alignItems="center"
+          justifyContent="center"
+          sx={{ flexDirection: { xs: "column-reverse", md: "row" } }}
+        >
           {/* Grid Izquierdo: Texto y Botones */}
-          <Grid item xs={12} md={6}>
+          <Grid
+            item
+            xs={12}
+            md={6}
+            sx={{ textAlign: { xs: "center", md: "left" } }}
+          >
             <Typography
               variant="h3"
               fontWeight="bold"
               gutterBottom
               sx={{
                 fontFamily: "'Red Hat Display', sans-serif",
-                color: "#903AF2",
+                color: "#FFFFFF",
+                textShadow: "1px 1px 4px rgba(0, 0, 0, 0.3)",
+                fontSize: { xs: "2rem", md: "3rem" }, // Adaptación de tamaño
               }}
             >
               Centralizá y potenciá tu alojamiento con Ubika
@@ -33,8 +46,17 @@ function HeroUbika() {
               variant="body1"
               mb={4}
               sx={{
+                display: {
+                  xs: "none",
+                  sm: "none",
+                  md: "block",
+                  lg: "block",
+                  xl: "block",
+                },
                 fontFamily: "'Merriweather Sans', sans-serif",
-                color: "#565254",
+                color: "#ECECEC",
+                textShadow: "0.5px 0.5px 2px rgba(0, 0, 0, 0.2)",
+                fontSize: { xs: "1rem", md: "1.2rem" }, // Tamaño ajustado
               }}
             >
               Gestioná reservas, canales de venta y pagos desde un solo lugar.
@@ -42,20 +64,26 @@ function HeroUbika() {
               más completa para alojamientos independientes.
             </Typography>
 
-            <Box display="flex" gap={2}>
+            <Box
+              display="flex"
+              gap={2}
+              justifyContent={{ xs: "center", md: "flex-start" }}
+            >
               <Button
                 variant="contained"
                 sx={{
                   backgroundColor: "#EE964B",
-                  color: "#fff",
+                  color: "#FFFFFF",
                   fontWeight: "bold",
                   fontFamily: "'Red Hat Display', sans-serif",
                   px: 4,
                   py: 1.5,
                   borderRadius: "12px",
+                  boxShadow: "0px 4px 12px rgba(0,0,0,0.2)",
                   "&:hover": {
                     backgroundColor: "#d97e3e",
                   },
+                  fontSize: { xs: "0.9rem", md: "1rem" },
                 }}
               >
                 Empezar prueba gratis
@@ -63,16 +91,18 @@ function HeroUbika() {
               <Button
                 variant="outlined"
                 sx={{
-                  borderColor: "#fff",
-                  color: "#fff",
+                  borderColor: "#FFFFFF",
+                  color: "#FFFFFF",
                   fontWeight: "bold",
                   fontFamily: "'Red Hat Display', sans-serif",
                   px: 4,
                   py: 1.5,
                   borderRadius: "12px",
+                  boxShadow: "0px 4px 12px rgba(0,0,0,0.2)",
                   "&:hover": {
-                    backgroundColor: "#f3e6fd",
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
                   },
+                  fontSize: { xs: "0.9rem", md: "1rem" },
                 }}
               >
                 Ver demo
@@ -81,12 +111,14 @@ function HeroUbika() {
           </Grid>
 
           {/* Grid Derecho: Solo Imagen */}
-          <Grid item xs={12} md={6} textAlign="center">
+          <Grid sx={{}} item xs={12} md={6}>
             <Box
               sx={{
                 backgroundColor: "transparent",
                 borderRadius: 4,
                 overflow: "hidden",
+                maxWidth: { xs: "100%", md: "500px" },
+                margin: "0 auto",
               }}
             >
               <img

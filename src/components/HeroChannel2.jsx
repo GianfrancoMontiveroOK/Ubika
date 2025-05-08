@@ -9,12 +9,13 @@ function FeaturesUbika() {
   return (
     <Box
       sx={{
-        background: "linear-gradient(to bottom, #fff 0%, #903AF2 150%)",
+        background: "linear-gradient(to bottom, #ffffff 0%, #903AF2 150%)",
         color: "#222",
-        height: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
+        height: "100%", // ✅ Ocupa el alto completo de la vista
+        py: 5,
       }}
     >
       <Container maxWidth="lg">
@@ -34,169 +35,80 @@ function FeaturesUbika() {
 
         {/* Features */}
         <Grid container spacing={6}>
-          {/* Feature 1 */}
-          <Grid item xs={12} md={6}>
-            <Box display="flex" alignItems="flex-start" gap={3}>
-              <Paper
-                sx={{
-                  backgroundColor: "#903AF2",
-                  borderRadius: 2,
-                  p: 2,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <DeviceHubIcon sx={{ fontSize: 40, color: "#fff" }} />
-              </Paper>
-              <Box>
-                <Typography
-                  variant="h6"
-                  fontWeight="bold"
-                  sx={{
-                    fontFamily: "'Red Hat Display', sans-serif",
-                    color: "#565254",
-                  }}
-                >
-                  Gestioná todos tus canales de venta
-                </Typography>
-                <Typography
-                  variant="body2"
-                  mt={1}
-                  sx={{
-                    fontFamily: "'Merriweather Sans', sans-serif",
-                    color: "#565254",
-                  }}
-                >
-                  Centralizá reservas de Booking, Airbnb, Expedia y muchos más
-                  desde un solo lugar.
-                </Typography>
-              </Box>
-            </Box>
-          </Grid>
-
-          {/* Feature 2 */}
-          <Grid item xs={12} md={6}>
-            <Box display="flex" alignItems="flex-start" gap={3}>
-              <Paper
-                sx={{
-                  backgroundColor: "#EE964B",
-                  borderRadius: 2,
-                  p: 2,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <LinkIcon sx={{ fontSize: 40, color: "#fff" }} />
-              </Paper>
-              <Box>
-                <Typography
-                  variant="h6"
-                  fontWeight="bold"
-                  sx={{
-                    fontFamily: "'Red Hat Display', sans-serif",
-                    color: "#565254",
-                  }}
-                >
-                  Sincronización en tiempo real
-                </Typography>
-                <Typography
-                  variant="body2"
-                  mt={1}
-                  sx={{
-                    fontFamily: "'Merriweather Sans', sans-serif",
-                    color: "#565254",
-                  }}
-                >
-                  Evitá reservas duplicadas con actualizaciones instantáneas en
-                  tus canales y tu panel Ubika.
-                </Typography>
-              </Box>
-            </Box>
-          </Grid>
-
-          {/* Feature 3 */}
-          <Grid item xs={12} md={6}>
-            <Box display="flex" alignItems="flex-start" gap={3}>
-              <Paper
-                sx={{
-                  backgroundColor: "#EAF7CF",
-                  borderRadius: 2,
-                  p: 2,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+          {[
+            {
+              icon: <DeviceHubIcon sx={{ fontSize: 40, color: "#fff" }} />,
+              bgColor: "#903AF2",
+              title: "Gestioná todos tus canales de venta",
+              description:
+                "Centralizá reservas de Booking, Airbnb, Expedia y muchos más desde un solo lugar.",
+            },
+            {
+              icon: <LinkIcon sx={{ fontSize: 40, color: "#fff" }} />,
+              bgColor: "#EE964B",
+              title: "Sincronización en tiempo real",
+              description:
+                "Evitá reservas duplicadas con actualizaciones instantáneas en tus canales y tu panel Ubika.",
+            },
+            {
+              icon: (
                 <AllInclusiveIcon sx={{ fontSize: 40, color: "#565254" }} />
-              </Paper>
-              <Box>
-                <Typography
-                  variant="h6"
-                  fontWeight="bold"
+              ),
+              bgColor: "#EAF7CF",
+              title: "Todo en una sola plataforma",
+              description:
+                "Gestioná reservas, cobros y reportes desde un mismo lugar, fácil y accesible.",
+            },
+            {
+              icon: <PriceChangeIcon sx={{ fontSize: 40, color: "#fff" }} />,
+              bgColor: "#565254",
+              title: "Optimizá precios y aumentá tus ingresos",
+              description:
+                "Usá reportes y sugerencias inteligentes para definir tarifas competitivas en cada canal.",
+            },
+          ].map((feature, index) => (
+            <Grid item xs={12} md={6} key={index}>
+              <Box display="flex" alignItems="flex-start" gap={3}>
+                <Paper
                   sx={{
-                    fontFamily: "'Red Hat Display', sans-serif",
-                    color: "#565254",
+                    backgroundColor: feature.bgColor,
+                    borderRadius: 2,
+                    p: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minWidth: "64px",
+                    minHeight: "64px",
                   }}
                 >
-                  Todo en una sola plataforma
-                </Typography>
-                <Typography
-                  variant="body2"
-                  mt={1}
-                  sx={{
-                    fontFamily: "'Merriweather Sans', sans-serif",
-                    color: "#565254",
-                  }}
-                >
-                  Gestioná reservas, cobros y reportes desde un mismo lugar,
-                  fácil y accesible.
-                </Typography>
+                  {feature.icon}
+                </Paper>
+                <Box>
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    sx={{
+                      fontFamily: "'Red Hat Display', sans-serif",
+                      color: "#565254",
+                      fontSize: { xs: "1.1rem", md: "1.25rem" },
+                    }}
+                  >
+                    {feature.title}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    mt={1}
+                    sx={{
+                      fontFamily: "'Merriweather Sans', sans-serif",
+                      color: "#565254",
+                    }}
+                  >
+                    {feature.description}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-          </Grid>
-
-          {/* Feature 4 */}
-          <Grid item xs={12} md={6}>
-            <Box display="flex" alignItems="flex-start" gap={3}>
-              <Paper
-                sx={{
-                  backgroundColor: "#565254",
-                  borderRadius: 2,
-                  p: 2,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <PriceChangeIcon sx={{ fontSize: 40, color: "#fff" }} />
-              </Paper>
-              <Box>
-                <Typography
-                  variant="h6"
-                  fontWeight="bold"
-                  sx={{
-                    fontFamily: "'Red Hat Display', sans-serif",
-                    color: "#565254",
-                  }}
-                >
-                  Optimizá precios y aumentá tus ingresos
-                </Typography>
-                <Typography
-                  variant="body2"
-                  mt={1}
-                  sx={{
-                    fontFamily: "'Merriweather Sans', sans-serif",
-                    color: "#565254",
-                  }}
-                >
-                  Usá reportes y sugerencias inteligentes para definir tarifas
-                  competitivas en cada canal.
-                </Typography>
-              </Box>
-            </Box>
-          </Grid>
+            </Grid>
+          ))}
         </Grid>
       </Container>
     </Box>

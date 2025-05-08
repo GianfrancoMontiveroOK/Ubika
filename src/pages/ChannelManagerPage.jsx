@@ -1,14 +1,11 @@
-import React, { useState } from "react";
-import { Box, Typography, Button, Grid, Container } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
+import React from "react";
+import { Box } from "@mui/material";
 import HeroChannel1 from "../components/HeroChannel1";
 import HeroChannel2 from "../components/HeroChannel2";
 import HeroChannel3 from "../components/HeroChannel3";
+import Footer from "../components/Footer";
 
-function ChannelManagerPage({}) {
-  const navigate = useNavigate();
-
+function ChannelManagerPage() {
   return (
     <Box
       sx={{
@@ -18,49 +15,67 @@ function ChannelManagerPage({}) {
         scrollBehavior: "smooth",
       }}
     >
-      {/* Sección 1 - Hero1 */}
+      {/* Sección 1 - HeroChannel1 */}
       <Box
-        sx={(theme) => ({
+        sx={{
           scrollSnapAlign: "start",
-          height: "80vh",
-          [theme.customBreakpoints.mobileShort]: {
-            height: "100vh", // iPhone SE u otros móviles bajos
-          },
-          [theme.customBreakpoints.mobileTall]: {
-            height: "70vh", // iPhone 14 o móviles altos
-          },
-        })}
+          height: "100vh",
+          minHeight: "100vh",
+          overflow: "hidden", // 👈 Evita que se solape
+          position: "relative",
+          zIndex: 1, // 👈 Asegura la superposición correcta
+        }}
       >
         <HeroChannel1 />
       </Box>
-      {/* Sección 2 - Hero2 */}
+
+      {/* Sección 2 - HeroChannel2 */}
       <Box
-        sx={(theme) => ({
+        sx={{
           scrollSnapAlign: "start",
-          height: "100vh",
-          [theme.customBreakpoints.mobileShort]: {
-            height: "100vh", // iPhone SE u otros móviles bajos
+          height: {
+            xs: "auto",
+            sm: "auto",
+            md: "100vh",
+            lg: "100vh",
+            xl: "100vh",
           },
-          [theme.customBreakpoints.mobileTall]: {
-            height: "100vh", // iPhone 14 o móviles altos
-          },
-        })}
+          minHeight: "100vh",
+          overflow: "auto",
+          position: "relative",
+          zIndex: 1,
+          mt: 0, // 👈 Evita saltos
+        }}
       >
         <HeroChannel2 />
       </Box>
+
+      {/* Sección 3 - HeroChannel3 */}
       <Box
-        sx={(theme) => ({
+        sx={{
           scrollSnapAlign: "start",
-          height: "100vh",
-          [theme.customBreakpoints.mobileShort]: {
-            height: "100vh", // iPhone SE u otros móviles bajos
+          height: {
+            xs: "auto",
+            sm: "auto",
+            md: "100vh",
+            lg: "100vh",
+            xl: "100vh",
           },
-          [theme.customBreakpoints.mobileTall]: {
-            height: "100vh", // iPhone 14 o móviles altos
-          },
-        })}
+          minHeight: "100vh",
+          overflow: "hidden",
+          position: "relative",
+          zIndex: 1,
+          mt: 0, // 👈 Evita saltos
+        }}
       >
         <HeroChannel3 />
+      </Box>
+      <Box
+        sx={{
+          scrollSnapAlign: "start",
+        }}
+      >
+        <Footer />
       </Box>
     </Box>
   );
